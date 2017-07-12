@@ -1,9 +1,9 @@
 {
-  "name": "reason-react-app",
+  "name": "6beers-client--app",
   "private": true,
   "version": "0.0.0",
-  "description": "Reason React App",
-  "main": "index.js",
+  "description": "Client for the 6beers web application",
+  "main": "src/index.re",
   "scripts": {
     "build": "npm-run-all build:*",
     "build:bsb": "bsb -make-world",
@@ -21,11 +21,9 @@
   "keywords": [
     "reason",
     "react",
-    "crra",
-    "reason-react",
-    "create-reason-react-app"
+    "6beers"
   ],
-  "author": "Mateusz Zatorski",
+  "author": "Peter Ferak",
   "license": "MIT",
   "dependencies": {
     "bs-director": "^0.0.1",
