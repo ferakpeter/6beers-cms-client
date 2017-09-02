@@ -84,14 +84,14 @@ $(document).ready(function(){
 
 });
 
-$(window).on('scroll',function(){
-   if(window_width > 980){
-        beerly.checkScrollForParallax();
-   }
-
-   beerly.checkScrollForTransparentNavbar();
-
-});
+// $(window).on('scroll',function(){
+//    if(window_width > 980){
+//         beerly.checkScrollForParallax();
+//    }
+//
+//    beerly.checkScrollForTransparentNavbar();
+//
+// });
 
 $(window).load(function(){
 

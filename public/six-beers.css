@@ -482,6 +482,8 @@ body > .navbar-collapse a {
   background-color: #FFFFFF;
   line-height: 20px;
   border-top: 1px solid #000;
+  font-size: 16px;
+  font-family: 'Orbitron', sans-serif;
 }
 .footer nav > ul {
   list-style: none;

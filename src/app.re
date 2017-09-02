@@ -168,7 +168,13 @@ let make _children => {
 
       <Header />
 
-      (ReasonReact.arrayToElement (Array.of_list beers))
+      <div className="wrapper">
+        <Brewery />
+
+        (ReasonReact.arrayToElement (Array.of_list beers))
+
+        <Contact />
+      </div>
 
       <Footer />
 

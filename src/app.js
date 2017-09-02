@@ -10,6 +10,8 @@ var React       = require("react");
 var Footer      = require("./components/footer.js");
 var Header      = require("./components/header.js");
 var $$String    = require("bs-platform/lib/js/string.js");
+var Brewery     = require("./components/brewery.js");
+var Contact     = require("./components/contact.js");
 var Caml_obj    = require("bs-platform/lib/js/caml_obj.js");
 var Caml_array  = require("bs-platform/lib/js/caml_array.js");
 var Caml_format = require("bs-platform/lib/js/caml_format.js");
@@ -179,7 +181,9 @@ function make() {
             }), param[/* state */3][/* availableBeers */0]);
       return React.createElement("div", {
                   className: "App"
-                }, ReasonReact.element(/* None */0, /* None */0, Header.make(/* array */[])), $$Array.of_list(beers), ReasonReact.element(/* None */0, /* None */0, Footer.make(/* array */[])));
+                }, ReasonReact.element(/* None */0, /* None */0, Header.make(/* array */[])), React.createElement("div", {
+                      className: "wrapper"
+                    }, ReasonReact.element(/* None */0, /* None */0, Brewery.make(/* array */[])), $$Array.of_list(beers), ReasonReact.element(/* None */0, /* None */0, Contact.make(/* array */[]))), ReasonReact.element(/* None */0, /* None */0, Footer.make(/* array */[])));
     });
   newrecord[/* initialState */10] = (function () {
       return /* record */[

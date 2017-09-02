@@ -19,12 +19,12 @@ function make(beer, _) {
                 }, React.createElement("div", {
                       className: "row"
                     }, React.createElement("div", {
-                          className: "col-md-10"
+                          className: "col-md-12"
                         }, React.createElement("div", {
-                              className: "tile"
+                              className: "tile center-block"
                             }, React.createElement("h3", {
                                   className: "tile-title"
-                                }, beer[/* name */2]), React.createElement("a", {
+                                }, beer[/* name */2]), React.createElement("br", undefined), React.createElement("a", {
                                   href: "",
                                   onClick: clicked
                                 }, React.createElement("img", {

@@ -21,9 +21,10 @@ let make ::beer _children => {
   render: fun _self =>
   <div className="container">
     <div className="row">
-      <div className="col-md-10">
-        <div className="tile">
+      <div className="col-md-12">
+        <div className="tile center-block">
           <h3 className="tile-title"> (ReasonReact.stringToElement beer.name) </h3>
+          <br />
           <a href="" onClick=(clicked) >
             <img className="image" src=beer.bottleImageLink height="300px" />
           </a>
