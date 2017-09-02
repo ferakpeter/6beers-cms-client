@@ -5,6 +5,6 @@ var App         = require("./app.js");
 var ReactDOMRe  = require("reason-react/lib/js/src/reactDOMRe.js");
 var ReasonReact = require("reason-react/lib/js/src/reasonReact.js");
 
-ReactDOMRe.renderToElementWithId(ReasonReact.element(/* None */0, /* None */0, App.make("Welcome to Create Reason React App!", /* array */[])), "root");
+ReactDOMRe.renderToElementWithId(ReasonReact.element(/* None */0, /* None */0, App.make(/* array */[])), "root");
 
 /*  Not a pure module */

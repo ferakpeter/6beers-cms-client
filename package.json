@@ -1,5 +1,5 @@
 {
-  "name": "6beers-client--app",
+  "name": "6beers-client-app",
   "private": true,
   "version": "0.0.0",
   "description": "Client for the 6beers web application",
@@ -27,6 +27,8 @@
   "license": "MIT",
   "dependencies": {
     "bs-director": "^0.0.1",
+    "bs-fetch": "^0.1.1",
+    "bs-json": "^0.2.1",
     "figlet": "^1.2.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",

@@ -3,13 +3,15 @@
   comma. If this screws with your editor highlighting, please tell us by filing
   an issue! */
 {
-  "name": "create-reason-react-app",
+  "name": "6beers-client-app",
   "reason": {
     "react-jsx": 2
   },
   "bs-dependencies": [
     "reason-react",
-    "bs-director"
+    "bs-director",
+    "bs-fetch",
+    "bs-json"
   ],
   "bs-dev-dependencies": [
     "bs-jest",
@@ -28,6 +30,9 @@
         },
         {
           "dir": "components"
+        },
+        {
+          "dir": "pages"
         }
       ]
     }

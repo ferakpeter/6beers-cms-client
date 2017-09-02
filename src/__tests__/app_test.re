@@ -11,7 +11,7 @@ let _ =
           "is defined"
           (
             fun _ => {
-              let component = ReactShallowRenderer.renderWithRenderer <App title="Foo Title" />;
+              let component = ReactShallowRenderer.renderWithRenderer <App />;
               expect (Js.Undefined.return component) |> toBeDefined
             }
           );
@@ -19,7 +19,7 @@ let _ =
           "renders"
           (
             fun _ => {
-              let tree = <App title="Foo Title" /> |> ReactShallowRenderer.renderWithRenderer;
+              let tree = <App /> |> ReactShallowRenderer.renderWithRenderer;
               expect tree |> toMatchSnapshot
             }
           )
