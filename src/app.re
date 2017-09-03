@@ -169,9 +169,21 @@ let make _children => {
       <Header />
 
       <div className="wrapper">
+        <div className="row">
+          <img className="img-responsive center-block" src="assets/img/beer/logo.png" style=(ReactDOMRe.Style.make height::"100px" ()) />
+        </div>
+
+        <Teaser />
+
         <Brewery />
 
+        <BeerDescription />
+
         (ReasonReact.arrayToElement (Array.of_list beers))
+
+        <div className="row">
+          <img className="img-responsive center-block" src="assets/img/beer/logo.png" style=(ReactDOMRe.Style.make height::"100px" ()) />
+        </div>
 
         <Contact />
       </div>

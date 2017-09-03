@@ -1,4 +1,4 @@
-let component = ReasonReact.statelessComponent "Contact";
+let component = ReasonReact.statelessComponent "Brewery";
 
 let make _children => {
   ...component,

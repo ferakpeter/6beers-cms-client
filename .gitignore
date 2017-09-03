@@ -2,3 +2,6 @@ dist
 node_modules
 .merlin
 lib
+src/**/*.js
+src/*.js
+public/main.js

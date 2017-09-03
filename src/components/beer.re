@@ -12,6 +12,7 @@ type beer = {
   labelImageLink: string
 };
 
+
 let clicked = fun _event => { Js.log "clicked"; };
 
 let component = ReasonReact.statelessComponent "Beer";
