@@ -12,8 +12,11 @@ type beer = {
   labelImageLink: string
 };
 
+type flipCard;
 
-let clicked = fun _event => { Js.log "clicked"; };
+external flipCard : flipCard = "FlipCard" [@@bs.module "react-flipcard"];
+
+let clicked = fun _event => { Js.log flipCard; };
 
 let component = ReasonReact.statelessComponent "Beer";
 

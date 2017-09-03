@@ -18,8 +18,8 @@ let make _children => {
             <div id="map-container" style=(ReactDOMRe.Style.make filter::"grayscale(100%)" height::"300px" ()) className="col-md-12 center-block" />
 
               </div>
-              <br />
-              <img className="img-responsive center-block" src="assets/img/beer/logo.png" style=(ReactDOMRe.Style.make height::"100px" ()) />
+              /* <br />
+              <img className="img-responsive center-block" src="assets/img/beer/logo.png" style=(ReactDOMRe.Style.make height::"100px" ()) /> */
         </div>
       </div>
 };

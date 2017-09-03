@@ -17,7 +17,7 @@
     "bs-jest",
     "bs-react-test-renderer"
   ],
-  "bsc-flags": ["-bs-super-errors"],
+  "bsc-flags": ["-bs-no-version-header", "-bs-super-errors"],
   "js-post-build": {
     "cmd": "./scripts/copy.js"
   },
