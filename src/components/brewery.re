@@ -6,7 +6,7 @@ let make _children => {
     <div className="section section-we-do-2" id="brewery">
           <div className="container">
               <div className="row">
-                  <h2> (ReasonReact.stringToElement "Our Mentality") </h2>
+                  <h2> (ReasonReact.stringToElement "A gipsy brewery") </h2>
                     <img className="img-rounded img-responsive" src="assets/img/beer/mentality.jpg" />
               </div>
               <div className="row">

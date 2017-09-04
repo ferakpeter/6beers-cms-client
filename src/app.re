@@ -140,13 +140,14 @@ let make _children => {
           code: beercode,
           name: beerSubheadline.name,
           description: beerInfo.teaser,
+          detail: beerDetail.teaser,
           priceSmall: beerDetailSubheadline.priceSmall,
           priceLarge: beerDetailSubheadline.priceLarge,
           quantitySmall: beerDetailSubheadline.quantitySmall,
           quantityLarge: beerDetailSubheadline.quantityLarge,
           bottleImageLink: String.concat "" [ "http://www.6beers.at/cms/", beerInfo.picture.img.src ],
           glassImageLink: "",
-          labelImageLink: beerDetail.picture.img.src };
+          labelImageLink: String.concat "" [ "http://www.6beers.at/cms/", beerDetail.picture.img.src] };
           result;
       });
     };
