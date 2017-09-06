@@ -15,7 +15,7 @@ type beer = {
 
 external order: string => unit = "order" [@@bs.val];
 
-let clicked = fun code _event => { Js.log "clicked"; order code; };
+let clicked = fun code _event => { order code; };
 
 let component = ReasonReact.statelessComponent "Beer";
 

@@ -1,5 +1,9 @@
 let component = ReasonReact.statelessComponent "Contact";
 
+external contact: unit => unit = "contact" [@@bs.val];
+
+let clicked = fun _event => { contact; };
+
 let make _children => {
   ...component,
   render: fun _self =>

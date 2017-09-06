@@ -141,6 +141,33 @@
 </head>
 
 <body className="no-touch">
+  <!-- Wenn Sie Cookies akzeptieren, können wir Ihnen die bestmögliche Erfahrung auf dieser Website bieten. Erfahren Sie mehr über Datenschutz & Cookies. -->
+
+  <!-- Modal -->
+  <div class="modal fade" id="confirmAge" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4>Are you of legal drining age?</h4>
+        </div>
+        <div class="modal-body">
+          <p>Please confirm that you of legal drinking age in your country.</p>
+          <br />
+          <h4>Cookie policy</h4>
+          <p>We use cookies to enhance your experience of this site, please acknowledge the Terms & Conditions described on this page.</p>
+
+          <button class="btn btn-success btn-large btn-block" data-toggle="modal" data-target="#confirmAge" onclick="confirm()">Enter</button>
+          <a href="https://www.google.com" target="_self" class="btn btn-info btn-large btn-block">Leave</a>
+        </div>
+        <div class="modal-footer">
+          <img class="img-responsive center-block" src="assets/img/beer/logo.png" style="height:100px;">
+          6 beers brewing co.
+        </div>
+      </div>
+    </div>
+  </div>
   <div id="root"></div>
   <script src="main.js"></script>
   <script src="http://maps.google.com/maps/api/js?key=AIzaSyC7wJhJUN6VhqXUBpZFweFRRIaxJ460We0&sensor=false"> </script>
