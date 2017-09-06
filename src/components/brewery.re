@@ -6,7 +6,7 @@ let make _children => {
     <div className="section section-we-do-2" id="brewery">
           <div className="container">
               <div className="row">
-                  <h2> (ReasonReact.stringToElement "A gipsy brewery") </h2>
+                  <h2> (ReasonReact.stringToElement "Craft brewery") </h2>
                     <img className="img-rounded img-responsive" src="assets/img/beer/mentality.jpg" />
               </div>
               <div className="row">
@@ -30,7 +30,7 @@ let make _children => {
                               <i className="pe-7s-rocket"> </i>
                           </div> */
                           <h3> (ReasonReact.stringToElement "High Quality") </h3>
-                          <p> (ReasonReact.stringToElement "Quality is a must and throughout the entire production of our beer we make sure of high quality standards. Besides the wonderful and tasty spring water from the Austrian mountains we rely on premium quality malts from Austria, Slovakia, Czech Republic, Germany and the U.K. Traditional and “new world” hops from around the world and most reliable and proven yeast strains available.") </p>
+                          <p> (ReasonReact.stringToElement "Quality is a must and throughout the entire production of our beer we make sure of high quality standards. Besides the wonderful and tasty spring water from the Austrian mountains we rely on premium quality malts from Austria, Slovakia, Czech Republic, Germany and the U.K. Traditional and 'new world' hops from around the world and most reliable and proven yeast strains available.") </p>
                       </div>
                   </div>
                   <div className="col-md-4">
