@@ -1,7 +1,18 @@
+type actions =
+  /* route Actions */
+  | Brewery
+  | Beer
+  | Order
+  | Contact
+  | All
+  /* external API calls */
+  | FetchCmsApi (list Beer.beer);
+
 type state = {
   availableBeers: list Beer.beer,
   selectedBeers: list Beer.beer,
-  shoppingCart: list Beer.beer
+  shoppingCart: list Beer.beer,
+  selectedRoute: actions
 };
 
 type cmsBeerSubheadline = {
@@ -43,14 +54,26 @@ type cmsNewsList = {
 
 let click _event _self => Js.log "clicked!";
 
-let component = ReasonReact.statefulComponent "App";
+let component = ReasonReact.reducerComponent "App";
 
 let make _children => {
   ...component,
   initialState: fun () => {
-    { availableBeers: [ ], selectedBeers: [ ], shoppingCart: [ ]}
+    { availableBeers: [ ], selectedBeers: [ ], shoppingCart: [ ], selectedRoute: All}
   },
-  didMount: fun self => {
+  reducer: fun action state => {
+    switch action {
+      /* router actions */
+      | All => ReasonReact.Update {...state, selectedRoute: All}
+      | Brewery => ReasonReact.Update {...state, selectedRoute: Brewery}
+      | Beer => ReasonReact.Update {...state, selectedRoute: Beer}
+      | Order => ReasonReact.Update {...state, selectedRoute: Order}
+      | Contact => ReasonReact.Update {...state, selectedRoute: Contact}
+
+      | FetchCmsApi beers => ReasonReact.Update {...state, availableBeers: beers };
+    }
+  },
+  didMount: fun {reduce} => {
 
     let parseConfig = fun (json:Js.Json.t) => {
 
@@ -152,13 +175,27 @@ let make _children => {
       });
     };
 
-    let changeState beers self => ReasonReact.Update {...self.ReasonReact.state, availableBeers: beers };
+    let changeState (beers:list Beer.beer) => reduce (fun _ => FetchCmsApi beers) ();
 
     Js.Promise.(
       Bs_fetch.fetch "http://www.6beers.at/cms/index.php/api.html?modul=NewsList"
-      |> then_ Bs_fetch.Response.json |>
-          then_ (fun result => { parseConfig result |> mapJsonValuesToBeer |> List.filter (fun (item:Beer.beer) => (item.quantityLarge + item.quantitySmall) > 0) |> self.update changeState } |> resolve )
+        |> then_ Bs_fetch.Response.json
+        |> then_ (fun result => { parseConfig result
+        |> mapJsonValuesToBeer
+        |> List.filter (fun (item:Beer.beer) => (item.quantityLarge + item.quantitySmall) > 0)
+        |> changeState
+        |> resolve })
     );
+
+    let router =
+      DirectorRe.makeRouter {
+        "/": reduce (fun _ => All),
+        "/beer": reduce (fun _ => Beer),
+        "/brewery": reduce (fun _ => Brewery),
+        "/contact": reduce (fun _ => Contact),
+        "/order": reduce (fun _ => Order)
+      };
+    DirectorRe.init router "/";
 
     ReasonReact.NoUpdate;
   },
@@ -170,23 +207,37 @@ let make _children => {
       <Header />
 
       <div className="wrapper">
-        <div className="row">
-          <img className="img-responsive center-block" src="assets/img/beer/logo.png" style=(ReactDOMRe.Style.make height::"100px" ()) />
-        </div>
 
-        <Teaser />
+      (switch (state.selectedRoute)
+          {
+            | All => <div>
+                <Teaser />
 
-        <Brewery />
+                <div className="row">
+                  <img className="img-responsive center-block" src="assets/img/logo.png" style=(ReactDOMRe.Style.make height::"100px" ()) />
+                </div>
 
-        <BeerDescription />
+                <Brewery />
 
-        (ReasonReact.arrayToElement (Array.of_list beers))
+                <div className="row">
+                  <img className="img-responsive center-block" src="assets/img/logo.png" style=(ReactDOMRe.Style.make height::"100px" ()) />
+                </div>
 
-        <div className="row">
-          <img className="img-responsive center-block" src="assets/img/beer/logo.png" style=(ReactDOMRe.Style.make height::"100px" ()) />
-        </div>
+                <BeerDescription />
 
-        <Contact />
+                (ReasonReact.arrayToElement (Array.of_list beers))
+
+                <div className="row">
+                  <img className="img-responsive center-block" src="assets/img/logo.png" style=(ReactDOMRe.Style.make height::"100px" ()) />
+                </div>
+
+                <Contact />
+              </div>
+            | Beer => <BeerDescription />
+            | Brewery => <Brewery />
+            | Order => <div> (ReasonReact.arrayToElement (Array.of_list beers)) </div>
+            | Contact => <Contact />
+          })
       </div>
 
       <Footer />

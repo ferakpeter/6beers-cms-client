@@ -1,8 +1,12 @@
 let component = ReasonReact.statelessComponent "Contact";
 
-external contact: unit => unit = "contact" [@@bs.val];
+external contact: string => unit = "contact" [@@bs.val];
 
-let clicked = fun _event => { contact; };
+external copyEmailToClipboard : string => unit = "copyEmailToClipboard" [@@bs.val];
+
+let copyEmail = fun _event => { copyEmailToClipboard ""; };
+
+let openEmail = fun _event => { contact ""; };
 
 let make _children => {
   ...component,
@@ -15,15 +19,16 @@ let make _children => {
               <p> (ReasonReact.stringToElement "Margaritenweg 23, 2384 Breitenfurt") </p>
               <p> (ReasonReact.stringToElement "Austria") </p>
               <p> (ReasonReact.stringToElement "Tel.: +43 677 624 168 66") </p>
-              <button  className="btn btn-success btn-large"> (ReasonReact.stringToElement "Email") </button>
+              <p>
+                <button onClick=copyEmail className="btn btn-large"> (ReasonReact.stringToElement "Copy E-mail address to clipboard") </button>
+              </p>
+              <p>
+                <button onClick=openEmail className="btn btn-success btn-large"> (ReasonReact.stringToElement "Open E-mail") </button>
+              </p>
           </div>
           <div className="row">
-
             <div id="map-container" style=(ReactDOMRe.Style.make filter::"grayscale(100%)" height::"300px" ()) className="col-md-12 center-block" />
-
-              </div>
-              /* <br />
-              <img className="img-responsive center-block" src="assets/img/beer/logo.png" style=(ReactDOMRe.Style.make height::"100px" ()) /> */
+          </div>
         </div>
       </div>
 };

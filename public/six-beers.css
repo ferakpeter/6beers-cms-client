@@ -18,7 +18,7 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
 }
 
 .chalkboard-effect {
-  /*background-image: url(assets/img/beer/mentality.jpg);*/
+  /*background-image: url(assets/img/mentality.jpg);*/
   background-size: cover;
   background-position: center;
   height:300px;
@@ -27,7 +27,7 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
 
 @supports (filter: grayscale(1)) and (background-blend-mode: difference) {
   .chalkboard-effect {
-    /*background-image: url(assets/img/beer/mentality.jpg), url(assets/img/beer/mentality.jpg);*/
+    /*background-image: url(assets/img/mentality.jpg), url(assets/img/mentality.jpg);*/
     background-blend-mode: difference;
     background-position: calc(50% - 1px) calc(50% - 1px), calc(50% + 1px) calc(50% + 1px);
     filter: brightness(1.5) grayscale(1);
@@ -35,14 +35,14 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
 }
 
 .pencil-effect {
-  background-image: url(assets/img/beer/mentality.jpg);
+  background-image: url(assets/img/mentality.jpg);
   background-size: cover;
   background-position: center;
 }
 
 @supports (filter: invert(1)) and (background-blend-mode: difference) {
   .pencil-effect {
-    background-image: url(assets/img/beer/mentality.jpg), url(assets/img/beer/mentality.jpg);
+    background-image: url(assets/img/mentality.jpg), url(assets/img/mentality.jpg);
     background-blend-mode: difference;
     background-position: calc(50% - 1px) calc(50% - 1px), calc(50% + 1px) calc(50% + 1px);
     filter: brightness(2) invert(1) grayscale(1);

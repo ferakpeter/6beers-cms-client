@@ -93,6 +93,10 @@
         });
       }
 
+      function copyEmailToClipboard(email) {
+        window.prompt("Copy to clipboard: Ctrl+C, Enter", "welcome@6beers.at");
+      }
+
       window.onload = function() {
         var cookie = getCookie('agreedToTerms');
         if (isEmpty(cookie) || (!isEmpty(cookie) && cookie.value == "false")) {
@@ -162,7 +166,7 @@
           <a href="https://www.google.com" target="_self" class="btn btn-info btn-large btn-block">Leave</a>
         </div>
         <div class="modal-footer">
-          <img class="img-responsive center-block" src="assets/img/beer/logo.png" style="height:100px;">
+          <img class="img-responsive center-block" src="assets/img/logo.png" style="height:100px;">
           6 beers brewing co.
         </div>
       </div>
@@ -194,6 +198,7 @@
 
     google.maps.event.addDomListener(window, 'load', init_map);
   </script>
+  <textarea class="emailAdress" style="display:none;">welcome@6beers.at</textarea>
 </body>
 
 </html>

@@ -7,7 +7,7 @@ let make _children => {
           <div className="container">
               <div className="row">
                 <h2> (ReasonReact.stringToElement "Our Beer") </h2>
-                  <img className="img-rounded img-responsive" src="assets/img/beer/brewery.jpg" />
+                  <img className="img-rounded img-responsive" src="assets/img/brewery.jpg" />
               </div>
               <div className="row">
                 <br />
@@ -41,7 +41,7 @@ let make _children => {
               </div>
           </div>
           /* <div className="row">
-              <img className="img-responsive center-block" src="assets/img/beer/logo.png" style=(ReactDOMRe.Style.make height::"100px" ()) />
+              <img className="img-responsive center-block" src="assets/img/logo.png" style=(ReactDOMRe.Style.make height::"100px" ()) />
             </div> */
       </div>
 };
