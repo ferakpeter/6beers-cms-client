@@ -29,9 +29,8 @@ let make ::beer _children => {
             <h3 className="tile-title"> (ReasonReact.stringToElement beer.name) </h3>
             <br />
             <img className="image" src=beer.bottleImageLink height="350px" />
-            <div> <br /> </div>
+            <br /> <br />
             <div dangerouslySetInnerHTML={"__html": beer.description} />
-            /* <button onClick=clicked className="btn btn-success btn-large btn-block"> (ReasonReact.stringToElement "Order") </button> */
           </div>
           <div>
             <h3 className="tile-title"> (ReasonReact.stringToElement beer.name) </h3>

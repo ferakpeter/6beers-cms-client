@@ -6,12 +6,14 @@ type actions =
   | Contact
   | All
   /* external API calls */
-  | FetchCmsApi (list Beer.beer);
+  | SetAvailableBeers (list Beer.beer)
+  | SetNews (list Teaser.news);
 
 type state = {
   availableBeers: list Beer.beer,
   selectedBeers: list Beer.beer,
   shoppingCart: list Beer.beer,
+  news: list Teaser.news,
   selectedRoute: actions
 };
 
@@ -36,7 +38,7 @@ type cmsImg = {
 type cmsPicture = {
   id: string,
   img: cmsImg,
-  caption: string
+  caption: option string
 };
 
 type cmsNewsItem = {
@@ -59,7 +61,7 @@ let component = ReasonReact.reducerComponent "App";
 let make _children => {
   ...component,
   initialState: fun () => {
-    { availableBeers: [ ], selectedBeers: [ ], shoppingCart: [ ], selectedRoute: All}
+    { availableBeers: [ ], selectedBeers: [ ], shoppingCart: [ ], news: [ ], selectedRoute: All}
   },
   reducer: fun action state => {
     switch action {
@@ -69,16 +71,17 @@ let make _children => {
       | Beer => ReasonReact.Update {...state, selectedRoute: Beer}
       | Order => ReasonReact.Update {...state, selectedRoute: Order}
       | Contact => ReasonReact.Update {...state, selectedRoute: Contact}
-
-      | FetchCmsApi beers => ReasonReact.Update {...state, availableBeers: beers };
+      /* Api actions */
+      | SetAvailableBeers beers => ReasonReact.Update {...state, availableBeers: beers }
+      | SetNews news => ReasonReact.Update {...state, news: news };
     }
   },
   didMount: fun {reduce} => {
 
     let parseConfig = fun (json:Js.Json.t) => {
 
-      Js.log "received json";
-      Js.log json;
+      /* Js.log "received json";
+      Js.log json; */
 
       let img (jsonValue:Js.Json.t) : cmsImg =>
         Json.Decode.{
@@ -91,7 +94,7 @@ let make _children => {
         Json.Decode.{
           id: jsonValue |> field "id" string,
           img: jsonValue |> field "img" img,
-          caption: jsonValue |> field "caption" string
+          caption: jsonValue |> optional (field "caption" string)
         };
 
       let newsItem (jsonValue:Js.Json.t) : cmsNewsItem =>
@@ -113,15 +116,15 @@ let make _children => {
 
       let root (jsonValue:Js.Json.t) => newsList jsonValue;
 
-      root json;
-
-
+      let apiRespone = root json;
+      /* Js.log "json response decoded"; */
+      apiRespone;
     };
 
-    let mapJsonValuesToBeer (cmsContent:cmsNewsList) : (list Beer.beer) => {
+    let removeEmpty = fun listOfString => List.filter (fun s => s != "") listOfString;
 
-
-      Js.log cmsContent;
+    let mapJsonValuesToState (cmsContent:cmsNewsList) : unit => {
+      /* Js.log cmsContent; */
       let headlines = List.map (fun item => item.headline) cmsContent.response;
       /* Js.log headlines; */
       let beercodes =
@@ -130,12 +133,20 @@ let make _children => {
           | Some match =>
             let test = Array.length (Js.Re.matches match) <= 2 ? Array.get (Js.Re.matches match) 1 : "";
             test;
-        }) headlines |> List.sort_uniq compare;
+        }) headlines |> removeEmpty |> List.sort_uniq compare;
 
-      beercodes |> List.map (fun beercode => {
+      /* Js.log beercodes; */
 
-        let beerInfo : cmsNewsItem = List.find (fun item => Js.Re.test item.headline (Js.Re.fromString (String.concat "" [ "beer-", beercode ]))) cmsContent.response;
-        let beerDetail : cmsNewsItem = List.find (fun item => Js.Re.test item.headline (Js.Re.fromString (String.concat "" [ "beer-", beercode, "-detail" ]))) cmsContent.response;
+      let beers = beercodes |> List.map (fun beercode => {
+
+        /* Js.log beercode; */
+        let beerInfo : cmsNewsItem = List.find (fun item => item.headline == (String.concat "" [ "beer-", beercode ])) cmsContent.response;
+        Js.log (String.concat " " [ "beerInfo", beerInfo.headline ]);
+        let beerDetail : cmsNewsItem = List.find (fun item => item.headline == (String.concat "" [ "beer-", beercode, "-detail" ])) cmsContent.response;
+        Js.log (String.concat " " [ "beerDetail", beerDetail.headline ]);
+
+        /* Js.log beerInfo;
+        Js.log beerDetail; */
 
         let parseBeerSubheadline value : cmsBeerSubheadline => {
           let parsedMatch = Js.Re.exec value (Js.Re.fromString "(.+)\/(.+)");
@@ -171,19 +182,37 @@ let make _children => {
           bottleImageLink: String.concat "" [ "http://www.6beers.at/cms/", beerInfo.picture.img.src ],
           glassImageLink: "",
           labelImageLink: String.concat "" [ "http://www.6beers.at/cms/", beerDetail.picture.img.src] };
-          result;
+
+        result;
       });
+
+      reduce (fun _ => SetAvailableBeers (beers |> List.filter (fun (item:Beer.beer) => (item.quantityLarge + item.quantitySmall) > 0) |> List.sort (fun (a:Beer.beer) (b:Beer.beer) => a.id - b.id) )) ();
+
+      let cmsNews =  cmsContent.response |> List.filter (fun cmsItem => Js.Re.test cmsItem.headline (Js.Re.fromString "news-.*"));
+
+      Js.log cmsNews;
+
+      let news = cmsNews |> List.map (fun (n:cmsNewsItem) => {
+        let mappedItem : Teaser.news = {
+          id: n.headline,
+          title: n.subheadline,
+          imageLink: String.concat "" [ "http://www.6beers.at/cms/", n.picture.img.src ],
+          link: n.picture.caption,
+          content: n.teaser
+        };
+        mappedItem;
+      });
+
+      reduce (fun _ => SetNews news) ();
+
+      ()
     };
 
-    let changeState (beers:list Beer.beer) => reduce (fun _ => FetchCmsApi beers) ();
-
     Js.Promise.(
-      Bs_fetch.fetch "http://www.6beers.at/cms/index.php/api.html?modul=NewsList"
+      Bs_fetch.fetch "http://www.6beers.at/cms/index.php/api.html?modul=NewsList&limit=1000"
         |> then_ Bs_fetch.Response.json
         |> then_ (fun result => { parseConfig result
-        |> mapJsonValuesToBeer
-        |> List.filter (fun (item:Beer.beer) => (item.quantityLarge + item.quantitySmall) > 0)
-        |> changeState
+        |> mapJsonValuesToState
         |> resolve })
     );
 
@@ -211,7 +240,8 @@ let make _children => {
       (switch (state.selectedRoute)
           {
             | All => <div>
-                <Teaser />
+                <Teaser news=state.news />
+                <br />
 
                 <div className="row">
                   <img className="img-responsive center-block" src="assets/img/logo.png" style=(ReactDOMRe.Style.make height::"100px" ()) />
@@ -232,15 +262,19 @@ let make _children => {
                 </div>
 
                 <Contact />
+
+                <Footer />
               </div>
+
             | Beer => <BeerDescription />
             | Brewery => <Brewery />
             | Order => <div> (ReasonReact.arrayToElement (Array.of_list beers)) </div>
             | Contact => <Contact />
+            /* Do nothing for non route actions */
+            | SetAvailableBeers beers => <div onClick=(fun _ => Js.log beers)>  </div>
+            | SetNews news => <div onClick=(fun _ => Js.log news)>  </div>
           })
       </div>
-
-      <Footer />
 
     </div>
   }

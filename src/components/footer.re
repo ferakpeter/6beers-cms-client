@@ -3,7 +3,7 @@ let component = ReasonReact.statelessComponent "Footer";
 let make _children => {
   ...component,
   render: fun _self =>
-  <footer className="footer footer-color-black">
+  <footer className="footer footer-color-black fixed-bottom">
       <div className="container">
           <nav className="pull-left">
               <ul>

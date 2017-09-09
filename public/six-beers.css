@@ -842,6 +842,7 @@ body > .navbar-collapse a {
 
 body {
   position: relative;
+  padding-top: 70px;
 }
 
 body > .navbar-collapse {
