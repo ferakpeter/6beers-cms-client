@@ -243,20 +243,24 @@ let make _children => {
                 <Teaser news=state.news />
                 <br />
 
+                <hr> </hr>
                 <div className="row">
                   <img className="img-responsive center-block" src="assets/img/logo.png" style=(ReactDOMRe.Style.make height::"100px" ()) />
                 </div>
 
                 <Brewery />
 
+                <hr> </hr>
                 <div className="row">
                   <img className="img-responsive center-block" src="assets/img/logo.png" style=(ReactDOMRe.Style.make height::"100px" ()) />
                 </div>
 
                 <BeerDescription />
 
+                <h2> (ReasonReact.stringToElement "Available Beers") </h2>
                 (ReasonReact.arrayToElement (Array.of_list beers))
 
+                <hr> </hr>
                 <div className="row">
                   <img className="img-responsive center-block" src="assets/img/logo.png" style=(ReactDOMRe.Style.make height::"100px" ()) />
                 </div>

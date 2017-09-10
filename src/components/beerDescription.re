@@ -29,12 +29,15 @@ let make _children => {
                           </div> */
                           <h3> (ReasonReact.stringToElement "Selection") </h3>
                           <p>
-                            (ReasonReact.stringToElement "Bohemian Lager") <br />
-                            (ReasonReact.stringToElement "Gold Rush California Common") <br />
-                            (ReasonReact.stringToElement "Ryebow Pale Ale") <br />
-                            (ReasonReact.stringToElement "Houses of the Hops India Pale Ale") <br />
-                            (ReasonReact.stringToElement "Dark IPAradise Black IPA") <br />
-                            (ReasonReact.stringToElement "Black Face of the Porter") <br />
+                            (ReasonReact.stringToElement "Bohemian (Lager)") <br />
+                            (ReasonReact.stringToElement "Gold Rush (California Common)") <br />
+                            (ReasonReact.stringToElement "TropicAle (American Pale Ale)") <br />
+                            (ReasonReact.stringToElement "Moonlight (Vermont Imperial IPA)") <br />
+                            (ReasonReact.stringToElement "Ryebow (Pale Ale)") <br />
+                            (ReasonReact.stringToElement "Houses of the Hops (India Pale Ale)") <br />
+                            (ReasonReact.stringToElement "Hey Oh (Coffee Stout)") <br />
+                            (ReasonReact.stringToElement "Black Dog (Black IPA)") <br />
+                            (ReasonReact.stringToElement "Dark Face (Porter)") <br />
                           </p>
                       </div>
                   </div>
