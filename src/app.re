@@ -43,7 +43,7 @@ let make _children => {
 
 
     Js.Promise.(
-      Bs_fetch.fetch "http://www.6beers.at/cms/index.php/api.html?modul=NewsList&limit=1000"
+      Bs_fetch.fetch (Cms.absolutePath "index.php/api.html?modul=NewsList&limit=1000")
         |> then_ Bs_fetch.Response.json
         |> then_ (fun result => { Api.parseConfig result
         |> Api.mapJsonValuesToState

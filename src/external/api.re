@@ -147,9 +147,9 @@ let mapJsonValuesToState = fun (cmsContent:cmsNewsList) : apiItems => {
           priceLarge: beerDetailSubheadline.priceLarge,
           quantitySmall: beerDetailSubheadline.quantitySmall,
           quantityLarge: beerDetailSubheadline.quantityLarge,
-          bottleImageLink: String.concat "" [ "http://www.6beers.at/cms/", beerInfo.picture.img.src ],
+          bottleImageLink: Cms.absolutePath beerInfo.picture.img.src,
           glassImageLink: "",
-          labelImageLink: String.concat "" [ "http://www.6beers.at/cms/", beerDetail.picture.img.src],
+          labelImageLink: Cms.absolutePath beerDetail.picture.img.src,
           maltinessRating: beerDetailSubheadline.maltinessRating,
           hoppinessRating: beerDetailSubheadline.hoppinessRating,
           bitternessRating: beerDetailSubheadline.bitternessRating };
@@ -163,7 +163,7 @@ let mapJsonValuesToState = fun (cmsContent:cmsNewsList) : apiItems => {
         let mappedItem : Teaser.news = {
           id: n.headline,
           title: n.subheadline,
-          imageLink: String.concat "" [ "http://www.6beers.at/cms/", n.picture.img.src ],
+          imageLink: Cms.absolutePath n.picture.img.src,
           link: n.picture.caption,
           content: n.teaser
         };

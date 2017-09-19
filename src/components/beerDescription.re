@@ -15,18 +15,12 @@ let make _children => {
               <div className="row">
                   <div className="col-md-8">
                       <div className="card">
-                          /* <div className="icon">
-                            <img className="img-responsive center-block" src="assets/img/icons/png/tap.png" />
-                          </div> */
                           <h3> (ReasonReact.stringToElement "Award Winning Craft Beer from Wienerwald") </h3>
                           <p> (ReasonReact.stringToElement "6 beers is a small private brewery from the Wienerwald region south of Vienna. We aim to create a unique drinking experience with outstanding Craftbeer that enriches every meal. To get a feeling of what our beers offer browse through our selection and get more information in the details for each beer type.") </p>
                       </div>
                   </div>
                   <div className="col-md-4">
                       <div className="card">
-                          /* <div className="icon">
-                            <img className="img-responsive center-block" src="assets/img/icons/png/bottle.png" />
-                          </div> */
                           <h3> (ReasonReact.stringToElement "Selection") </h3>
                           <p>
                             (ReasonReact.stringToElement "Bohemian (Lager)") <br />
@@ -43,8 +37,5 @@ let make _children => {
                   </div>
               </div>
           </div>
-          /* <div className="row">
-              <img className="img-responsive center-block" src="assets/img/logo.png" style=(ReactDOMRe.Style.make height::"100px" ()) />
-            </div> */
       </div>
 };
