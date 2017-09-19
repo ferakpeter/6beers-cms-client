@@ -41,15 +41,16 @@ let make _children => {
   },
   didMount: fun {reduce} => {
 
+    let callReducer (items:Api.apiItems) => {
+        reduce (fun _ => SetAvailableBeers items.beers) ();
+        reduce (fun _ => SetNews items.news) (); };
 
     Js.Promise.(
       Bs_fetch.fetch (Cms.absolutePath "index.php/api.html?modul=NewsList&limit=1000")
         |> then_ Bs_fetch.Response.json
         |> then_ (fun result => { Api.parseConfig result
         |> Api.mapJsonValuesToState
-        |> (fun (items:Api.apiItems) => {
-            reduce (fun _ => SetAvailableBeers items.beers) ();
-            reduce (fun _ => SetNews items.news) (); })
+        |> callReducer
         |> resolve })
     );
 
@@ -82,33 +83,25 @@ let make _children => {
                   <Teaser news=state.news />
                   <br />
 
-                  <hr> </hr>
-                  <div className="row">
-                    <img className="img-responsive center-block" src="assets/img/logo.png" style=(ReactDOMRe.Style.make height::"100px" ()) />
-                  </div>
+                  <HorizontalSeparator />
 
                   <Brewery />
 
-                  <hr> </hr>
-                  <div className="row">
-                    <img className="img-responsive center-block" src="assets/img/logo.png" style=(ReactDOMRe.Style.make height::"100px" ()) />
-                  </div>
+                  <HorizontalSeparator />
 
                   <BeerDescription />
 
                   <h2> (ReasonReact.stringToElement "Available Beer") </h2>
                   (ReasonReact.arrayToElement (Array.of_list beers))
 
-                  <hr> </hr>
-                  <div className="row">
-                    <img className="img-responsive center-block" src="assets/img/logo.png" style=(ReactDOMRe.Style.make height::"100px" ()) />
-                  </div>
+                  <HorizontalSeparator />
 
                   <Contact />
 
-
                 </div>
+
                 <Footer />
+
               </div>
 
             | Beer => <BeerDescription />
