@@ -14,10 +14,10 @@ let make _children => {
         <div className="collapse navbar-collapse">
           <ul className="nav navbar-nav navbar-right navbar-uppercase">
             <li className="social-links">
-                <a href="https://www.facebook.com/6beersbrewing">
+                <a target="_blank" href="https://www.facebook.com/6beersbrewing">
                     <span className="fui-facebook"> </span>
                 </a>
-                <a href="https://instagram.com/6beersbrewing">
+                <a target="_blank" href="https://instagram.com/6beersbrewing">
                     <span className="fui-instagram"> </span>
                 </a>
             </li>

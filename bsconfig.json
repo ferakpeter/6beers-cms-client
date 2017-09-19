@@ -34,6 +34,9 @@
         },
         {
           "dir": "pages"
+        },
+        {
+          "dir": "external"
         }
       ]
     }

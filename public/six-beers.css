@@ -3625,3 +3625,11 @@ body.noscroll {
     height: 350px;
   }
 }
+
+.beerPoints {
+  margin: 3px;
+}
+
+.beerPoints_notGiven {
+  opacity: 0.5;
+}
