@@ -170,8 +170,12 @@ let mapJsonValuesToState = fun (cmsContent:cmsNewsList) : apiItems => {
         mappedItem;
       });
 
+      let filterAndSortBeers beers => beers
+        |> List.filter (fun (item:Beer.beer) => (item.quantityLarge + item.quantitySmall) > 0)
+        |> List.sort (fun (a:Beer.beer) (b:Beer.beer) => a.id - b.id);
+
       {
         news: news,
-        beers: beers
+        beers: (beers |>  filterAndSortBeers)
       };
     };
