@@ -132,7 +132,6 @@ let mapJsonValuesToState = fun (cmsContent:cmsNewsList) : apiItems => {
       }
     };
 
-
         let beerSubheadline = parseBeerSubheadline beerInfo.subheadline;
         let beerDetailSubheadline = parseBeerDetailSubheadline beerDetail.subheadline;
 

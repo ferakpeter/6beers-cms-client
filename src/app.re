@@ -51,7 +51,7 @@ let make _children => {
         |> then_ (fun result => { Api.parseConfig result
         |> Api.mapJsonValuesToState
         |> callReducer
-        |> resolve })
+        |> resolve }) |> ignore
     );
 
     let router =
@@ -66,7 +66,7 @@ let make _children => {
 
     ReasonReact.NoUpdate;
   },
-  render: fun {state, reduce} => {
+  render: fun {state} => {
     let beers = List.map (fun (b:Beer.beer) => <Beer beer=b key=b.code /> ) state.availableBeers;
 
     <div className="App">
@@ -109,8 +109,7 @@ let make _children => {
             | Order => <div> (ReasonReact.arrayToElement (Array.of_list beers)) </div>
             | Contact => <Contact />
             /* Do nothing for non route actions */
-            | SetAvailableBeers beers => <div onClick=(fun _ => Js.log beers)>  </div>
-            | SetNews news => <div onClick=(fun _ => Js.log news)>  </div>
+            | SetAvailableBeers _ | SetNews _ => ReasonReact.nullElement
           })
       </div>
 
