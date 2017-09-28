@@ -18,7 +18,7 @@ module Slider = {
         "slidesToShow": 3,
         "slidesToScroll": 1,
         "autoplay": Js.Boolean.to_js_boolean true,
-        "autoplaySpeed": 3000,
+        "autoplaySpeed": 5000,
         "responsive":  [|
           {
             "breakpoint": 1024,
@@ -61,5 +61,6 @@ let make ::news _children => {
         <Slider>
           (ReasonReact.arrayToElement (newsElements news))
         </Slider>
+        <br />
       </div>
 };

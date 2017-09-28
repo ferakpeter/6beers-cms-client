@@ -36,7 +36,7 @@ module BeerPoints = {
 let component = ReasonReact.statelessComponent "Beer";
 let maximumNumberOfPoints = [| 1, 2, 3, 4, 5 |];
 
-let make ::beer _children => {
+let make ::beer ::onOrdered _children => {
   ...component,
   render: fun _self =>
   <div className="container">
@@ -71,7 +71,7 @@ let make ::beer _children => {
             <img className="img-responsive center-block" src=beer.labelImageLink />
             <br />
             <div dangerouslySetInnerHTML={"__html": beer.detail} />
-            <button onClick=(clicked beer.name) className="btn btn-success btn-large btn-block"> (ReasonReact.stringToElement "Order") </button>
+            <button onClick=(onOrdered) className="btn btn-success btn-large btn-block"> (ReasonReact.stringToElement "Order") </button>
           <br />
           </div>
         </ReactFlipCard>
