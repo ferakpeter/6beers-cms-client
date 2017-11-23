@@ -151,7 +151,8 @@ let mapJsonValuesToState = fun (cmsContent:cmsNewsList) : apiItems => {
           labelImageLink: Cms.absolutePath beerDetail.picture.img.src,
           maltinessRating: beerDetailSubheadline.maltinessRating,
           hoppinessRating: beerDetailSubheadline.hoppinessRating,
-          bitternessRating: beerDetailSubheadline.bitternessRating };
+          bitternessRating: beerDetailSubheadline.bitternessRating,
+          inShoppingCart: false };
 
         result;
       });

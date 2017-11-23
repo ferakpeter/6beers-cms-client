@@ -10,7 +10,7 @@ let _ =
         test
           "is defined"
           (
-            fun _ => {
+            fun () => {
               let component = ReactShallowRenderer.renderWithRenderer <App />;
               expect (Js.Undefined.return component) |> toBeDefined
             }

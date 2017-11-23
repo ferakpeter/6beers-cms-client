@@ -14,7 +14,8 @@ type beer = {
   labelImageLink: string,
   maltinessRating: int,
   hoppinessRating: int,
-  bitternessRating: int
+  bitternessRating: int,
+  inShoppingCart: bool
 };
 
 external order: string => unit = "order" [@@bs.val];
@@ -71,7 +72,7 @@ let make ::beer ::onOrdered _children => {
             <img className="img-responsive center-block" src=beer.labelImageLink />
             <br />
             <div dangerouslySetInnerHTML={"__html": beer.detail} />
-            <button onClick=(onOrdered) className="btn btn-success btn-large btn-block"> (ReasonReact.stringToElement "Order") </button>
+            <button onClick=(clicked beer.name) className="btn btn-success btn-large btn-block"> (ReasonReact.stringToElement "Order") </button>
           <br />
           </div>
         </ReactFlipCard>

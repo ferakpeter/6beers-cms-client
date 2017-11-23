@@ -59,9 +59,9 @@
           eventAction: 'order ' + beer,
           eventLabel: 'Main'
         });
-        var emailFormat = "mailto:order@6beers.at?subject=Order {beer}&body=Dear 6beers, please send me a quote for\n - Amount:\n - Adress:";
+        var emailFormat = "mailto:order@6beers.at?subject=Order {beer}&body=Hi 6beers brewing co., I want to order 6x{beer} - Please send me the current price.";
 
-        var link = emailFormat.replace('{beer}', beer);
+        var link = emailFormat.replace('{beer}', beer).replace('{beer}', beer);
         window.location.href = link;
       }
 
