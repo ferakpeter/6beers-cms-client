@@ -105,7 +105,6 @@ let make _children => {
               <HorizontalSeparator />
               <BeerDescription />
               <h2> (ReasonReact.stringToElement "Available Beer") </h2>
-              <h5> (ReasonReact.stringToElement "(hover or tap to order)") </h5>
               (ReasonReact.arrayToElement (Array.of_list beers))
               <HorizontalSeparator />
               <Contact />
@@ -114,7 +113,10 @@ let make _children => {
           </div>
         | Beer => <BeerDescription />
         | Brewery => <Brewery />
-        | Order => <div> (ReasonReact.arrayToElement (Array.of_list beers)) </div>
+        | Order => <div>
+            <h2> (ReasonReact.stringToElement "Available Beer") </h2>
+            (ReasonReact.arrayToElement (Array.of_list beers))
+          </div>
         | Contact => <Contact />
         /* Do nothing for non route actions */
         | UpdateAvailableBeers _

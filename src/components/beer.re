@@ -67,7 +67,7 @@ let make ::beer ::onOrdered _children => {
 
           </div>
           <div>
-            <h2 className="tile-title"> (ReasonReact.stringToElement "( ") (ReasonReact.stringToElement beer.sort) (ReasonReact.stringToElement " )") </h2>
+            <h2 className="tile-title"> (ReasonReact.stringToElement beer.sort) </h2>
             <br />
             <img className="img-responsive center-block" src=beer.labelImageLink />
             <br />
