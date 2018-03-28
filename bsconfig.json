@@ -4,19 +4,18 @@
   an issue! */
 {
   "name": "6beers-client-app",
+  "refmt": 3,
   "reason": {
     "react-jsx": 2
   },
   "bs-dependencies": [
     "reason-react",
-    "bs-director",
     "bs-fetch",
-    "bs-json"
+    "@glennsl/bs-json"
   ],
   "bsc-flags": ["-bs-no-version-header", "-bs-super-errors"],
   "bs-dev-dependencies": [
-    "bs-jest",
-    "bs-react-test-renderer"
+    "bs-jest"
   ],
   "js-post-build": {
     "cmd": "./scripts/copy.js"

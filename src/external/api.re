@@ -23,7 +23,7 @@ type cmsImg = {
 type cmsPicture = {
   id: string,
   img: cmsImg,
-  caption: option string
+  caption: option(string)
 };
 
 type cmsNewsItem = {
@@ -35,105 +35,100 @@ type cmsNewsItem = {
 };
 
 type cmsNewsList = {
-  response: list cmsNewsItem,
+  response: list(cmsNewsItem),
   status: string
 };
 
 type apiItems = {
-  news: list Teaser.news,
-  beers: list Beer.beer
+  news: list(Teaser.news),
+  beers: list(Beer.beer)
 };
 
-let parseConfig = fun (json:Js.Json.t) => {
+module Decode = {
+  let img = (jsonValue:Js.Json.t) =>
+  Json.Decode.{
+    src: jsonValue |> field("src", string),
+    width: jsonValue |> field("width", int),
+    height: jsonValue |> field("height", int)
+  };
 
-  /* Js.log "received json";
-  Js.log json; */
-
-  let img (jsonValue:Js.Json.t) : cmsImg =>
+  let picture = (jsonValue:Js.Json.t) =>
     Json.Decode.{
-      src: jsonValue |> field "src" string,
-      width: jsonValue |> field "width" int,
-      height: jsonValue |> field "height" int
+      id: jsonValue |> field("id", string),
+      img: jsonValue |> field("img", img),
+      caption: jsonValue |> optional(field("caption", string))
     };
 
-  let picture (jsonValue:Js.Json.t) : cmsPicture =>
+  let newsItem = (jsonValue:Js.Json.t) =>
     Json.Decode.{
-      id: jsonValue |> field "id" string,
-      img: jsonValue |> field "img" img,
-      caption: jsonValue |> optional (field "caption" string)
+      id: jsonValue |> field("id", string),
+      headline: jsonValue |> field("headline", string),
+      subheadline: jsonValue |> field("subheadline", string),
+      teaser: jsonValue |> field("teaser", string),
+      picture: jsonValue |> field("picture", picture)
     };
 
-  let newsItem (jsonValue:Js.Json.t) : cmsNewsItem =>
+  let newsList = (jsonValue:Js.Json.t) =>
     Json.Decode.{
-      id: jsonValue |> field "id" string,
-      headline: jsonValue |> field "headline" string,
-      subheadline: jsonValue |> field "subheadline" string,
-      teaser: jsonValue |> field "teaser" string,
-      picture: jsonValue |> field "picture" picture
+      response: jsonValue |> field("response", list(newsItem)),
+      status: jsonValue |> field("status", string)
     };
+};
 
-  let newsItems (jsonValue:Js.Json.t) : list cmsNewsItem => Json.Decode.(list newsItem jsonValue);
+let parseConfig = (json:Js.Json.t) => {
 
-  let newsList (jsonValue:Js.Json.t) : cmsNewsList =>
-    Json.Decode.{
-      response: jsonValue |> field "response" newsItems,
-      status: jsonValue |> field "status" string
-    };
-
-  let root (jsonValue:Js.Json.t) => newsList jsonValue;
-
-  let apiRespone = root json;
+  let apiRespone = Decode.newsList(json);
   /* Js.log "json response decoded"; */
   apiRespone;
 };
 
-let removeEmpty = fun listOfString => List.filter (fun s => s != "") listOfString;
+let removeEmpty = listOfString => List.filter((s => s != ""), listOfString);
 
-let mapJsonValuesToState = fun (cmsContent:cmsNewsList) : apiItems => {
+let mapJsonValuesToState = (cmsContent:cmsNewsList) : apiItems => {
   /* Js.log cmsContent; */
-  let headlines = List.map (fun item => item.headline) cmsContent.response;
+  let headlines = List.map((item => item.headline), cmsContent.response);
   /* Js.log headlines; */
   let beercodes =
-    List.map (fun (item:string) => switch (Js.Re.exec item (Js.Re.fromString "beer-(\w+).*")) {
+    List.map((item:string) => switch (Js.Re.exec(item, (Js.Re.fromString("beer-(\w+).*")))) {
       | None => "";
-      | Some match =>
-        let test = Array.length (Js.Re.matches match) <= 2 ? Array.get (Js.Re.matches match) 1 : "";
+      | Some(match) =>
+        let test = Array.length(Js.Re.matches(match)) <= 2 ? Array.get(Js.Re.matches(match), 1) : "";
         test;
-    }) headlines |> removeEmpty |> List.sort_uniq compare;
+    }, headlines) |> removeEmpty |> List.sort_uniq(compare);
 
   /* Js.log beercodes; */
 
-  let beers = beercodes |> List.map (fun beercode => {
+  let beers = beercodes |> List.map (beercode => {
 
     /* Js.log beercode; */
-    let beerInfo : cmsNewsItem = List.find (fun item => item.headline == (String.concat "" [ "beer-", beercode ])) cmsContent.response;
-    Js.log (String.concat " " [ "beerInfo", beerInfo.headline ]);
-    let beerDetail : cmsNewsItem = List.find (fun item => item.headline == (String.concat "" [ "beer-", beercode, "-detail" ])) cmsContent.response;
-    Js.log (String.concat " " [ "beerDetail", beerDetail.headline ]);
+    let beerInfo : cmsNewsItem = List.find(item => item.headline == String.concat("", [ "beer-", beercode ]), cmsContent.response);
+    Js.log(String.concat(" ", [ "beerInfo", beerInfo.headline ]));
+    let beerDetail : cmsNewsItem = List.find(item => item.headline == String.concat("", [ "beer-", beercode, "-detail" ]), cmsContent.response);
+    Js.log(String.concat(" ", [ "beerDetail", beerDetail.headline ]));
 
     /* Js.log beerInfo;
     Js.log beerDetail; */
 
-    let parseBeerSubheadline value : cmsBeerSubheadline => {
-      let parsedMatch = Js.Re.exec value (Js.Re.fromString "(.+)\/(.+)\/(.+)");
+    let parseBeerSubheadline = value => {
+      let parsedMatch = Js.Re.exec(value, Js.Re.fromString("(.+)\/(.+)\/(.+)"));
       switch (parsedMatch) {
         | None => { name: "", id: 0, sort: ""};
-        | Some match =>
-          { name: Array.get (Js.Re.matches match) 1, id: int_of_string (Array.get (Js.Re.matches match) 2), sort: (Array.get (Js.Re.matches match) 3) };
+        | Some(match) =>
+          { name: Array.get(Js.Re.matches(match), 1), id: int_of_string(Array.get(Js.Re.matches(match), 2)), sort: Array.get(Js.Re.matches(match), 3) };
       }
     };
 
-    let parseBeerDetailSubheadline value : cmsBeerDetailSubheadline => {
-      let parsedMatch = Js.Re.exec value (Js.Re.fromString "(.+)\/(.+)\/(.+)\/(.+)\/(.+)\/(.+)\/(.+)");
+    let parseBeerDetailSubheadline = value => {
+      let parsedMatch = Js.Re.exec(value, Js.Re.fromString("(.+)\/(.+)\/(.+)\/(.+)\/(.+)\/(.+)\/(.+)"));
       switch (parsedMatch) {
         | None => { priceSmall: 0.0, priceLarge: 0.0, quantitySmall: 0, quantityLarge: 0, maltinessRating: 0, hoppinessRating: 0, bitternessRating: 0 };
-        | Some match =>
-          { priceSmall: float_of_string (Array.get (Js.Re.matches match) 1), priceLarge: float_of_string (Array.get (Js.Re.matches match) 2), quantitySmall: int_of_string (Array.get (Js.Re.matches match) 3), quantityLarge: int_of_string (Array.get (Js.Re.matches match) 4), maltinessRating: int_of_string (Array.get (Js.Re.matches match) 5), hoppinessRating: int_of_string (Array.get (Js.Re.matches match) 6), bitternessRating: int_of_string (Array.get (Js.Re.matches match) 7) };
+        | Some(match) =>
+          { priceSmall: float_of_string(Array.get(Js.Re.matches(match), 1)), priceLarge: float_of_string(Array.get(Js.Re.matches(match), 2)), quantitySmall: int_of_string(Array.get(Js.Re.matches(match), 3)), quantityLarge: int_of_string(Array.get(Js.Re.matches(match), 4)), maltinessRating: int_of_string(Array.get(Js.Re.matches(match), 5)), hoppinessRating: int_of_string(Array.get(Js.Re.matches(match), 6)), bitternessRating: int_of_string(Array.get(Js.Re.matches(match), 7)) };
       }
     };
 
-        let beerSubheadline = parseBeerSubheadline beerInfo.subheadline;
-        let beerDetailSubheadline = parseBeerDetailSubheadline beerDetail.subheadline;
+        let beerSubheadline = parseBeerSubheadline(beerInfo.subheadline);
+        let beerDetailSubheadline = parseBeerDetailSubheadline(beerDetail.subheadline);
 
         let result : Beer.beer = {
           id: beerSubheadline.id,
@@ -146,9 +141,9 @@ let mapJsonValuesToState = fun (cmsContent:cmsNewsList) : apiItems => {
           priceLarge: beerDetailSubheadline.priceLarge,
           quantitySmall: beerDetailSubheadline.quantitySmall,
           quantityLarge: beerDetailSubheadline.quantityLarge,
-          bottleImageLink: Cms.absolutePath beerInfo.picture.img.src,
+          bottleImageLink: Cms.absolutePath(beerInfo.picture.img.src),
           glassImageLink: "",
-          labelImageLink: Cms.absolutePath beerDetail.picture.img.src,
+          labelImageLink: Cms.absolutePath(beerDetail.picture.img.src),
           maltinessRating: beerDetailSubheadline.maltinessRating,
           hoppinessRating: beerDetailSubheadline.hoppinessRating,
           bitternessRating: beerDetailSubheadline.bitternessRating,
@@ -157,22 +152,22 @@ let mapJsonValuesToState = fun (cmsContent:cmsNewsList) : apiItems => {
         result;
       });
 
-      let cmsNews =  cmsContent.response |> List.filter (fun cmsItem => Js.Re.test cmsItem.headline (Js.Re.fromString "news-.*"));
+      let cmsNews =  cmsContent.response |> List.filter(cmsItem => Js.Re.test(cmsItem.headline, (Js.Re.fromString("news-.*"))));
 
       let news = cmsNews |> List.map (fun (n:cmsNewsItem) => {
         let mappedItem : Teaser.news = {
           id: n.headline,
           title: n.subheadline,
-          imageLink: Cms.absolutePath n.picture.img.src,
+          imageLink: Cms.absolutePath (n.picture.img.src),
           link: n.picture.caption,
           content: n.teaser
         };
         mappedItem;
       });
 
-      let filterAndSortBeers beers => beers
-        |> List.filter (fun (item:Beer.beer) => (item.quantityLarge + item.quantitySmall) > 0)
-        |> List.sort (fun (a:Beer.beer) (b:Beer.beer) => a.id - b.id);
+      let filterAndSortBeers = beers => beers
+        |> List.filter((item:Beer.beer) => (item.quantityLarge + item.quantitySmall) > 0)
+        |> List.sort(((a:Beer.beer), (b:Beer.beer)) => a.id - b.id);
 
       {
         news: news,

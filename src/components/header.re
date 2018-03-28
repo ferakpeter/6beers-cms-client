@@ -1,15 +1,15 @@
-let component = ReasonReact.statelessComponent "Header";
+let component = ReasonReact.statelessComponent("Header");
 
-let make _children => {
+let make = _children => {
   ...component,
-  render: fun _self =>
+  render: _self =>
     <nav className="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div className="container">
         <div className="navbar-header">
             <button id="menu-toggle" className="navbar-toggle">
 
             </button>
-            <a className="navbar-brand" href="#"> (ReasonReact.stringToElement "6 beers brewing co.") </a>
+            <a className="navbar-brand" href="#"> (ReasonReact.stringToElement("6 beers brewing co.")) </a>
         </div>
         <div className="collapse navbar-collapse">
           <ul className="nav navbar-nav navbar-right navbar-uppercase">
@@ -23,22 +23,22 @@ let make _children => {
             </li>
             <li>
                 <a href="#/brewery">
-                (ReasonReact.stringToElement "Brewery")
+                (ReasonReact.stringToElement("Brewery"))
                 </a>
             </li>
             <li>
                 <a href="#/beer">
-                (ReasonReact.stringToElement "Beer")
+                (ReasonReact.stringToElement("Beer"))
                 </a>
             </li>
             <li>
                 <a href="#/order">
-                (ReasonReact.stringToElement "Make an Order")
+                (ReasonReact.stringToElement("Make an Order"))
                 </a>
             </li>
             <li>
                 <a href="#/contact">
-                (ReasonReact.stringToElement "Contact Us")
+                (ReasonReact.stringToElement("Contact Us"))
                 </a>
             </li>
           </ul>

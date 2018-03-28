@@ -1,111 +1,135 @@
-type actions =
-  /* route Actions */
+type routes =
+  | Loading
   | Brewery
   | Beer
   | Order
   | Contact
-  | All
+  | All;
+
+type actions =
+  /* route Actions */
+  | Navigate(routes)
   /* User actions */
-  | AddBeerToShoppingCart string
+  | AddBeerToShoppingCart(string)
   /* external API calls */
-  | UpdateAvailableBeers (list Beer.beer)
-  | UpdateNews (list Teaser.news);
+  | Load
+  | ApiCallFailed
+  | UpdateAvailableBeers(list(Beer.beer))
+  | UpdateNews(list(Teaser.news));
 
 type state = {
-  availableBeers: list Beer.beer,
-  shoppingCart: list string,
-  news: list Teaser.news,
-  selectedRoute: actions
+  availableBeers: list(Beer.beer),
+  shoppingCart: list(string),
+  news: list(Teaser.news),
+  selectedRoute: routes
 };
 
 let namespace = "6beers-client-app";
 
-external unsafeJsonParse : string => 'a = "JSON.parse" [@@bs.val];
+[@bs.val] external unsafeJsonParse : string => 'a = "JSON.parse";
 
-let saveLocally (shoppingCart: list string) =>
-  switch (Js.Json.stringifyAny shoppingCart) {
+let saveLocally = (shoppingCart: list(string)) =>
+  switch (Js.Json.stringifyAny(shoppingCart)) {
   | None => ()
-  | Some stringifiedShoppingCart =>
-    Dom.Storage.(localStorage |> setItem namespace stringifiedShoppingCart)
+  | Some(stringifiedShoppingCart) =>
+    Dom.Storage.(localStorage |> setItem(namespace, stringifiedShoppingCart))
   };
 
-let addBeerToShoppingCart beerCode _event => AddBeerToShoppingCart beerCode;
+let urlToSelectedRoute = hash =>
+  switch(hash) {
+    | "beer"  => Beer
+    | "brewery" => Brewery
+    |"contact" => Contact
+    | "order" => Order
+    | _ => All
+  };
 
-let component = ReasonReact.reducerComponent "App";
+let addBeerToShoppingCart = (beerCode, _event) => AddBeerToShoppingCart(beerCode);
 
-let make _children => {
+let component = ReasonReact.reducerComponent("App");
+
+let make = _children => {
   ...component,
-  initialState: fun () => {
+  initialState: () => {
     let shoppingCartBeerCodes =
-      switch Dom.Storage.(localStorage |> getItem namespace) {
+      switch Dom.Storage.(localStorage |> getItem(namespace)) {
       | None => []
-      | Some shoppingCart => unsafeJsonParse shoppingCart
+      | Some(shoppingCart) => unsafeJsonParse(shoppingCart)
       };
-    {availableBeers: [], shoppingCart: shoppingCartBeerCodes, news: [], selectedRoute: All}
+    {availableBeers: [], shoppingCart: shoppingCartBeerCodes, news: [], selectedRoute: urlToSelectedRoute(ReasonReact.Router.dangerouslyGetInitialUrl().hash)}
   },
-  reducer: fun action state =>
-    switch action {
+  reducer: (action, state) =>
+    switch (action) {
     /* router actions */
-    | All => ReasonReact.Update {...state, selectedRoute: All}
-    | Brewery => ReasonReact.Update {...state, selectedRoute: Brewery}
-    | Beer => ReasonReact.Update {...state, selectedRoute: Beer}
-    | Order => ReasonReact.Update {...state, selectedRoute: Order}
-    | Contact => ReasonReact.Update {...state, selectedRoute: Contact}
+    | Navigate(page) => ReasonReact.Update({...state, selectedRoute: page })
     /* User Actions */
-    | AddBeerToShoppingCart beer =>
-      let shoppingCart = List.append state.shoppingCart [beer];
-      Js.log shoppingCart;
-      ReasonReact.UpdateWithSideEffects
-        {...state, shoppingCart} (fun _self => saveLocally shoppingCart)
+    | AddBeerToShoppingCart(beer) =>
+      let shoppingCart = List.append(state.shoppingCart, [beer]);
+      Js.log(shoppingCart);
+      ReasonReact.UpdateWithSideEffects({...state, shoppingCart}, (_self => saveLocally(shoppingCart)))
     /* Api actions */
-    | UpdateAvailableBeers beers => ReasonReact.Update {...state, availableBeers: beers}
-    | UpdateNews news => ReasonReact.Update {...state, news}
+    | Load =>
+    ReasonReact.UpdateWithSideEffects(
+        {...state, selectedRoute: Loading},
+        (
+          self =>
+            Js.Promise.(
+              Fetch.fetch(Cms.absolutePath("index.php/api.html?modul=NewsList&limit=1000"))
+              |> then_(Fetch.Response.json)
+              |> then_(json =>
+                  json
+                  |> Api.parseConfig
+                  |> Api.mapJsonValuesToState
+                  |> (items => { self.send(UpdateAvailableBeers(items.beers));
+                                 self.send(UpdateNews(items.news)); })
+                  |> resolve
+                )
+              |> catch(_err =>
+                  Js.Promise.resolve(self.send(ApiCallFailed))
+                )
+              |> ignore
+            )
+        ),
+      )
+    | UpdateAvailableBeers(beers) => ReasonReact.Update({...state, availableBeers: beers})
+    | UpdateNews(news) => ReasonReact.Update({...state, news})
     },
-  didMount: fun {reduce} => {
-    let callReducer (items: Api.apiItems) => {
-      reduce (fun _ => UpdateAvailableBeers items.beers) ();
-      reduce (fun _ => UpdateNews items.news) ()
-    };
-    Js.Promise.(
-      Bs_fetch.fetch (Cms.absolutePath "index.php/api.html?modul=NewsList&limit=1000") |>
-      then_ Bs_fetch.Response.json |>
-      then_ (
-        fun result => Api.parseConfig result |> Api.mapJsonValuesToState |> callReducer |> resolve
-      ) |> ignore
-    );
-    let router =
-      DirectorRe.makeRouter {
-        "/": reduce (fun _ => All),
-        "/beer": reduce (fun _ => Beer),
-        "/brewery": reduce (fun _ => Brewery),
-        "/contact": reduce (fun _ => Contact),
-        "/order": reduce (fun _ => Order)
-      };
-    DirectorRe.init router "/";
-    ReasonReact.NoUpdate
+  didMount: self => {
+    self.send(Load);
+    ReasonReact.NoUpdate;
   },
-  render: fun {state, reduce} => {
+  subscriptions: self => [
+    Sub(
+      () =>
+        ReasonReact.Router.watchUrl(url =>
+          self.send(Navigate(urlToSelectedRoute(url.hash)))
+        ),
+        ReasonReact.Router.unwatchUrl,
+    ),
+  ],
+  render: ({state, send}) => {
     let beers =
       List.map
         (
-          fun (b: Beer.beer) =>
-            <Beer beer=b key=b.code onOrdered=(reduce (addBeerToShoppingCart b.code)) />
-        )
-        state.availableBeers;
+          (b: Beer.beer) =>
+            <Beer beer=b key=b.code onOrdered=(_event => send(AddBeerToShoppingCart(b.code))) />
+        , state.availableBeers)
+        ;
     <div className="App">
       <Header />
       (
         switch state.selectedRoute {
         | All =>
           <div>
-            <div style=(ReactDOMRe.Style.make padding::"20px" margin::"auto" width::"90%" ())>
+            <div style=(ReactDOMRe.Style.make(~padding="20px", ~margin="auto", ~width="90%", ()))>
               <Teaser news=state.news />
+              <BeerTeaser beers=state.availableBeers />
               <HorizontalSeparator />
               <Brewery />
               <HorizontalSeparator />
               <BeerDescription />
-              <h2> (ReasonReact.stringToElement "Available Beer") </h2>
-              (ReasonReact.arrayToElement (Array.of_list beers))
+              <h2> (ReasonReact.stringToElement("Available Beer")) </h2>
+              (ReasonReact.arrayToElement(Array.of_list(beers)))
               <HorizontalSeparator />
               <Contact />
             </div>
@@ -114,14 +138,24 @@ let make _children => {
         | Beer => <BeerDescription />
         | Brewery => <Brewery />
         | Order => <div>
-            <h2> (ReasonReact.stringToElement "Available Beer") </h2>
-            (ReasonReact.arrayToElement (Array.of_list beers))
+            <h2> (ReasonReact.stringToElement("Available Beer")) </h2>
+            (ReasonReact.arrayToElement(Array.of_list(beers)))
           </div>
         | Contact => <Contact />
-        /* Do nothing for non route actions */
-        | UpdateAvailableBeers _
-        | UpdateNews _
-        | AddBeerToShoppingCart _ => ReasonReact.nullElement
+        | Loading =>
+          <div>
+            <div style=(ReactDOMRe.Style.make(~padding="20px", ~margin="auto", ~width="90%", ()))>
+              <HorizontalSeparator />
+              <Brewery />
+              <HorizontalSeparator />
+              <BeerDescription />
+              <h2> (ReasonReact.stringToElement("Available Beer")) </h2>
+              (ReasonReact.arrayToElement(Array.of_list(beers)))
+              <HorizontalSeparator />
+              <Contact />
+            </div>
+            <Footer />
+          </div>
         }
       )
     </div>
