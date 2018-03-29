@@ -1,10 +1,18 @@
 type routes =
-  | Loading
   | Brewery
   | Beer
   | Order
   | Contact
   | All;
+
+let urlToSelectedRoute = hash =>
+  switch(hash) {
+    | "beer"  => Beer
+    | "brewery" => Brewery
+    | "contact" => Contact
+    | "order" => Order
+    | _ => All
+};
 
 type actions =
   /* route Actions */
@@ -12,16 +20,23 @@ type actions =
   /* User actions */
   | AddBeerToShoppingCart(string)
   /* external API calls */
-  | Load
+  | LoadApi
   | ApiCallFailed
-  | UpdateAvailableBeers(list(Beer.beer))
-  | UpdateNews(list(Teaser.news));
+  | UpdateUi(list(Beer.beer), list(Teaser.news))
+  | IncreaseBottleImage(int)
+  | DecreaseBottleImage(int);
+
+type apiStatus =
+  | Loading
+  | Loaded
+  | Failed;
 
 type state = {
   availableBeers: list(Beer.beer),
   shoppingCart: list(string),
   news: list(Teaser.news),
-  selectedRoute: routes
+  selectedRoute: routes,
+  apiStatus: apiStatus
 };
 
 let namespace = "6beers-client-app";
@@ -35,13 +50,9 @@ let saveLocally = (shoppingCart: list(string)) =>
     Dom.Storage.(localStorage |> setItem(namespace, stringifiedShoppingCart))
   };
 
-let urlToSelectedRoute = hash =>
-  switch(hash) {
-    | "beer"  => Beer
-    | "brewery" => Brewery
-    |"contact" => Contact
-    | "order" => Order
-    | _ => All
+let updateBottleImageHeight = (beers, id, change) =>
+  {
+    List.map(((item:Beer.beer) => item.id == id ? {...item, bottleImageHeightSmall: Some(BeerTeaser.fallbackDefaultImageHeight(item.bottleImageHeightSmall) + change)} : item), beers);
   };
 
 let addBeerToShoppingCart = (beerCode, _event) => AddBeerToShoppingCart(beerCode);
@@ -56,7 +67,7 @@ let make = _children => {
       | None => []
       | Some(shoppingCart) => unsafeJsonParse(shoppingCart)
       };
-    {availableBeers: [], shoppingCart: shoppingCartBeerCodes, news: [], selectedRoute: urlToSelectedRoute(ReasonReact.Router.dangerouslyGetInitialUrl().hash)}
+    {availableBeers: [], shoppingCart: shoppingCartBeerCodes, news: [], selectedRoute: urlToSelectedRoute(ReasonReact.Router.dangerouslyGetInitialUrl().hash), apiStatus: Loading}
   },
   reducer: (action, state) =>
     switch (action) {
@@ -68,9 +79,9 @@ let make = _children => {
       Js.log(shoppingCart);
       ReasonReact.UpdateWithSideEffects({...state, shoppingCart}, (_self => saveLocally(shoppingCart)))
     /* Api actions */
-    | Load =>
+    | LoadApi =>
     ReasonReact.UpdateWithSideEffects(
-        {...state, selectedRoute: Loading},
+        {...state, apiStatus: Loading},
         (
           self =>
             Js.Promise.(
@@ -80,8 +91,7 @@ let make = _children => {
                   json
                   |> Api.parseConfig
                   |> Api.mapJsonValuesToState
-                  |> (items => { self.send(UpdateAvailableBeers(items.beers));
-                                 self.send(UpdateNews(items.news)); })
+                  |> (items => { self.send(UpdateUi(items.beers, items.news)); })
                   |> resolve
                 )
               |> catch(_err =>
@@ -91,11 +101,15 @@ let make = _children => {
             )
         ),
       )
-    | UpdateAvailableBeers(beers) => ReasonReact.Update({...state, availableBeers: beers})
-    | UpdateNews(news) => ReasonReact.Update({...state, news})
+    | ApiCallFailed => ReasonReact.Update({...state, apiStatus: Failed})
+    | UpdateUi(beers, news) => ReasonReact.Update({...state, apiStatus: Loaded, availableBeers: beers, news})
+    | IncreaseBottleImage(beerId) => 
+      ReasonReact.Update({...state, availableBeers: updateBottleImageHeight(state.availableBeers, beerId, 20)})
+    | DecreaseBottleImage(beerId) => 
+      ReasonReact.Update({...state, availableBeers: updateBottleImageHeight(state.availableBeers, beerId, -20)})
     },
   didMount: self => {
-    self.send(Load);
+    self.send(LoadApi);
     ReasonReact.NoUpdate;
   },
   subscriptions: self => [
@@ -122,16 +136,16 @@ let make = _children => {
         | All =>
           <div>
             <div style=(ReactDOMRe.Style.make(~padding="20px", ~margin="auto", ~width="90%", ()))>
-              <Teaser news=state.news />
-              <BeerTeaser beers=state.availableBeers />
+              <BeerTeaser beers=state.availableBeers onMouseOver=((beerId, _mouse) => send(IncreaseBottleImage(beerId))) onMouseOut=((beerId, _mouse) => send(DecreaseBottleImage(beerId))) />  
               <HorizontalSeparator />
               <Brewery />
               <HorizontalSeparator />
+              <Teaser news=state.news />
+              <HorizontalSeparator />
               <BeerDescription />
-              <h2> (ReasonReact.stringToElement("Available Beer")) </h2>
-              (ReasonReact.arrayToElement(Array.of_list(beers)))
               <HorizontalSeparator />
               <Contact />
+              <Logo height="200px" />
             </div>
             <Footer />
           </div>
@@ -142,20 +156,6 @@ let make = _children => {
             (ReasonReact.arrayToElement(Array.of_list(beers)))
           </div>
         | Contact => <Contact />
-        | Loading =>
-          <div>
-            <div style=(ReactDOMRe.Style.make(~padding="20px", ~margin="auto", ~width="90%", ()))>
-              <HorizontalSeparator />
-              <Brewery />
-              <HorizontalSeparator />
-              <BeerDescription />
-              <h2> (ReasonReact.stringToElement("Available Beer")) </h2>
-              (ReasonReact.arrayToElement(Array.of_list(beers)))
-              <HorizontalSeparator />
-              <Contact />
-            </div>
-            <Footer />
-          </div>
         }
       )
     </div>

@@ -22,22 +22,22 @@ let make = _children => {
                 </a>
             </li>
             <li>
-                <a href="#/brewery">
+                <a href="#brewery">
                 (ReasonReact.stringToElement("Brewery"))
                 </a>
             </li>
             <li>
-                <a href="#/beer">
+                <a href="#beer">
                 (ReasonReact.stringToElement("Beer"))
                 </a>
             </li>
             <li>
-                <a href="#/order">
+                <a href="#order">
                 (ReasonReact.stringToElement("Make an Order"))
                 </a>
             </li>
             <li>
-                <a href="#/contact">
+                <a href="#contact">
                 (ReasonReact.stringToElement("Contact Us"))
                 </a>
             </li>

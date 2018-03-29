@@ -3,7 +3,7 @@ let component = ReasonReact.statelessComponent("BeerDescription");
 let make = _children => {
   ...component,
   render: _self =>
-    <div className="section section-we-do-2" id="beer">
+    <div className="section" id="beer">
       <div className="container">
         <div className="row">
           <h2> (ReasonReact.stringToElement("Our Beer")) </h2>

@@ -1,78 +1,35 @@
 let component = ReasonReact.statelessComponent("BeerTeaser");
 
-let beerElements = (beers: list(Beer.beer)) =>
+let fallbackDefaultImageHeight = (height) =>
+  switch height {
+  | Some(height) => height
+  | None => 200
+  };
+
+let beerElements = (beers: list(Beer.beer), onMouseOver, onMouseOut) =>
   beers
   |> List.map((b: Beer.beer) =>
-       <div
-         style=(ReactDOMRe.Style.make(~marginBottom="10px", ())) key=b.code>
+       <div key=b.code>
          <h3> (ReasonReact.stringToElement(b.name)) </h3>
-         <div style=(ReactDOMRe.Style.make(~margin="5px", ()))>
-           <img className="image" src=b.bottleImageLink height="350px" />
+         <div>
+           <img className="image center" src=b.bottleImageLink height=(string_of_int(fallbackDefaultImageHeight(b.bottleImageHeightSmall)) ++ "px")
+           onMouseOver=(onMouseOver(b.id))
+           onMouseOut=(onMouseOut(b.id))
+           />
          </div>
-         <div
-           className="tile"
-           style=(ReactDOMRe.Style.make(~margin="5px", ()))>
-           <div>
-             <h4 className="beerPoints">
-               (ReasonReact.stringToElement("maltiness"))
-             </h4>
-             (
-               ReasonReact.arrayToElement(
-                 BeerPoints.maximumNumberOfPoints
-                 |> Array.map((i: int) =>
-                      <BeerPoints
-                        key=(string_of_int(i))
-                        points=i
-                        numberOfPoints=b.maltinessRating
-                      />
-                    ),
-               )
-             )
-           </div>
-           <div>
-             <h4> (ReasonReact.stringToElement("hoppiness")) </h4>
-             (
-               ReasonReact.arrayToElement(
-                 BeerPoints.maximumNumberOfPoints
-                 |> Array.map((i: int) =>
-                      <BeerPoints
-                        key=(string_of_int(i))
-                        points=i
-                        numberOfPoints=b.hoppinessRating
-                      />
-                    ),
-               )
-             )
-           </div>
-           <div>
-             <span style=(ReactDOMRe.Style.make())>
-               <h4> (ReasonReact.stringToElement("bitterness")) </h4>
-             </span>
-             (
-               ReasonReact.arrayToElement(
-                 BeerPoints.maximumNumberOfPoints
-                 |> Array.map((i: int) =>
-                      <BeerPoints
-                        key=(string_of_int(i))
-                        points=i
-                        numberOfPoints=b.bitternessRating
-                      />
-                    ),
-               )
-             )
-           </div>
+         <div className="tile div-table center">
+           <BeerPointRow numberOfPoints=b.maltinessRating title="maltiness" />
+           <BeerPointRow numberOfPoints=b.hoppinessRating title="hoppiness" />
+           <BeerPointRow numberOfPoints=b.bitternessRating title="bitterness" />
          </div>
        </div>
      )
   |> Array.of_list;
 
-let make = (~beers, _children) => {
+let make = (~beers, ~onMouseOver, ~onMouseOut, _children) => {
   ...component,
   render: _self =>
     <div>
-      <h2 className="center-block">
-        (ReasonReact.stringToElement("Beer"))
-      </h2>
-      <Slider> (ReasonReact.arrayToElement(beerElements(beers))) </Slider>
+      <Slider slidesToShow=4 dots=false> (ReasonReact.arrayToElement(beerElements(beers, onMouseOver, onMouseOut))) </Slider>
     </div>,
 };

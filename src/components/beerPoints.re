@@ -5,7 +5,7 @@ let maximumNumberOfPoints = [|1, 2, 3, 4, 5|];
 let make = (~points, ~numberOfPoints, _children) => {
   ...component,
   render: _self =>
-    <span className="beerPoints">
+    <span className="div-table-col">
       <img
         className=(
           points <= numberOfPoints ?

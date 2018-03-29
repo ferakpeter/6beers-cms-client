@@ -3,13 +3,13 @@ let component = ReasonReact.statelessComponent("Slider");
 [@bs.module "react-slick"]
 external reactSlick : ReasonReact.reactClass = "default";
 
-let make = children =>
+let make = (~slidesToShow, ~dots, children) =>
   ReasonReact.wrapJsForReason(
     ~reactClass=reactSlick,
     ~props={
-      "dots": Js.Boolean.to_js_boolean(true),
+      "dots": Js.Boolean.to_js_boolean(dots),
       "infinite": Js.Boolean.to_js_boolean(true),
-      "slidesToShow": 3,
+      "slidesToShow": slidesToShow,
       "slidesToScroll": 1,
       "lazyLoad": Js.Boolean.to_js_boolean(true),
       "autoplay": Js.Boolean.to_js_boolean(true),
