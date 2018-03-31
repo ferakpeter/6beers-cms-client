@@ -30,6 +30,6 @@ let make = (~beers, ~onMouseOver, ~onMouseOut, _children) => {
   ...component,
   render: _self =>
     <div>
-      <Slider slidesToShow=4 dots=false> (ReasonReact.arrayToElement(beerElements(beers, onMouseOver, onMouseOut))) </Slider>
+      <Slider slidesToShow=4 dots=false autoplaySpeed=2000> (ReasonReact.arrayToElement(beerElements(beers, onMouseOver, onMouseOut))) </Slider>
     </div>,
 };

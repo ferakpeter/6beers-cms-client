@@ -5,12 +5,20 @@ let component = ReasonReact.statelessComponent("Contact");
 [@bs.val]
 external copyEmailToClipboard : string => unit = "copyEmailToClipboard";
 
+[@bs.val]
+external initMap : unit => unit = "init_map";
+
+
 let copyEmail = _event => copyEmailToClipboard("");
 
 let openEmail = _event => contact("");
 
 let make = _children => {
   ...component,
+  didMount: _self => {
+    initMap();
+    ReasonReact.NoUpdate;
+  },
   render: _self =>
     <div className="section section-contact" id="contact">
       <div className="container">

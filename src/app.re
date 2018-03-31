@@ -145,7 +145,10 @@ let make = _children => {
               <BeerDescription />
               <HorizontalSeparator />
               <Contact />
+              <br />
+              <br />
               <Logo height="200px" />
+              <br />
             </div>
             <Footer />
           </div>
