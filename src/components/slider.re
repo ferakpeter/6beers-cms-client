@@ -16,7 +16,13 @@ let make = (~slidesToShow, ~dots, ~autoplaySpeed, children) =>
       "autoplaySpeed": autoplaySpeed,
       "responsive": [|
         {
-          "breakpoint": 1024,
+          "breakpoint": 1395,
+          "settings": {
+            "slidesToShow": 3,
+          },
+        },
+        {
+          "breakpoint": 1032,
           "settings": {
             "slidesToShow": 2,
           },
