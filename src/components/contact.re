@@ -27,10 +27,9 @@ let make = _children => {
           <p> (ReasonReact.stringToElement("6 beers brewering company")) </p>
           <p>
             (
-              ReasonReact.stringToElement("Margaritenweg 23, 2384 Breitenfurt")
+              ReasonReact.stringToElement("Margaritenweg 23, 2384 Breitenfurt Austria")
             )
           </p>
-          <p> (ReasonReact.stringToElement("Austria")) </p>
           <p> (ReasonReact.stringToElement("Tel.: +43 677 624 168 66")) </p>
           <p>
             <button onClick=copyEmail className="btn btn-large">

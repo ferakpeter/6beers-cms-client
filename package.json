@@ -26,14 +26,14 @@
   "author": "Peter Ferak",
   "license": "MIT",
   "dependencies": {
-    "bs-fetch": "^0.2.1",
     "@glennsl/bs-json": "^1.1.2",
+    "bs-fetch": "^0.2.1",
     "figlet": "^1.2.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "reason-react": "^0.3.4",
     "react-flipcard": "^0.2.1",
-    "react-slick": "^0.18.0",
+    "react-slick": "^0.22.3",
+    "reason-react": "^0.3.4",
     "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
