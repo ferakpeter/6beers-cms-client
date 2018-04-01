@@ -147,7 +147,7 @@ let make = _children => {
               <Contact />
               <br />
               <br />
-              <Logo height="200px" />
+              <Logo height="200px" inverseColors=false />
               <br />
             </div>
             <Footer />
