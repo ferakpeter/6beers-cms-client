@@ -6,7 +6,7 @@ let make = _children => {
     <div className="section" id="beer">
       <div className="container">
         <div className="row">
-          <h2> (ReasonReact.stringToElement("Our Beer")) </h2>
+          <h2> (ReasonReact.stringToElement("About Us")) </h2>
           <img
             className="img-rounded img-responsive"
             src="assets/img/brewery.jpg"

@@ -32,8 +32,8 @@ let make = _children => {
                 </a>
             </li>
             <li>
-                <a href="#order">
-                (ReasonReact.stringToElement("Make an Order"))
+                <a href="#aboutus">
+                (ReasonReact.stringToElement("About Us"))
                 </a>
             </li>
             <li>

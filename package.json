@@ -7,14 +7,15 @@
   "scripts": {
     "build": "npm-run-all build:*",
     "build:bsb": "bsb -make-world",
-    "build:webpack": "webpack -p",
+    "build:webpack": "webpack",
+    "build:production": "NODE_ENV=production webpack",
     "clean": "npm-run-all clean:*",
     "clean:bsb": "bsb -clean-world",
     "clean:project": "rimraf public/main.js lib .merlin 'src/**/*.js'",
-    "start": "node scripts/startDev.js",
+    "start": "npm-run-all --parallel start:bsb start:webpack",
     "start:parallel": "npm-run-all --parallel start:bsb start:webpack",
     "start:bsb": "npm run build:bsb -- -w",
-    "start:webpack": "node scripts/webpackDevServer.js",
+    "start:webpack": "webpack -w",
     "jest": "jest",
     "test": "npm-run-all build:bsb jest"
   },
@@ -28,26 +29,26 @@
   "dependencies": {
     "@glennsl/bs-json": "^1.1.2",
     "bs-fetch": "^0.2.1",
+    "extract-text-webpack-plugin": "^3.0.2",
     "figlet": "^1.2.0",
     "react": "^16.3.0",
     "react-dom": "^16.3.0",
     "react-flipcard": "^0.2.1",
     "react-slick": "^0.22.3",
     "reason-react": "^0.3.4",
-    "slick-carousel": "^1.8.1"
+    "slick-carousel": "^1.8.1",
+    "webpack-cli": "^2.0.15"
   },
   "devDependencies": {
     "bs-jest": "^0.1.0",
-    "bs-platform": "^2.2.3",
+    "bs-platform": "^3.0.0",
     "html-webpack-plugin": "^2.28.0",
     "jest": "^20.0.4",
     "npm-run-all": "^4.0.2",
     "pushstate-server": "^3.0.0",
     "reason-cli": "https://github.com/reasonml/reason-cli.git#beta-v-1.13.6-bin-darwin",
     "rimraf": "^2.6.1",
-    "webpack": "^2.6.1",
-    "webpack-dev-server": "^2.4.5",
-    "write-file-webpack-plugin": "^4.1.0"
+    "webpack": "^4.0.1"
   },
   "jest": {
     "roots": [

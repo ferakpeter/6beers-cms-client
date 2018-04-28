@@ -1,4 +1,9 @@
-type beer = {
+type graphic = {
+  thumbnail: Image.image,
+  fullsize: Image.image
+};
+
+type beer = { 
   id: int,
   code: string,
   name: string,
@@ -9,20 +14,15 @@ type beer = {
   priceLarge: float,
   quantitySmall: int,
   quantityLarge: int,
-  bottleImageLink: string,
-  bottleImageHeightSmall: option(int),
-  bottleImageHeightLarge: option(int),
-  glassImageLink: string,
-  glassImageHeightSmall: option(int),
-  glassImageHeightLarge: option(int),
-  labelImageLink: string,
-  labelImageHeightSmall: option(int),
-  labelImageHeightLarge: option(int),
-  maltinessRating: int,
-  hoppinessRating: int,
-  bitternessRating: int,
-  inShoppingCart: bool,
+  bottle: graphic,
+  glass: graphic,
+  label: graphic,
+  ratings: array(Ratings.ratings),
 };
+
+type displaySizes =
+  | Preview(beer)
+  | Detail(beer);
 
 [@bs.val] external order : string => unit = "order";
 
@@ -33,6 +33,14 @@ let component = ReasonReact.statelessComponent("Beer");
 let make = (~beer, ~onOrdered, _children) => {
   ...component,
   render: _self =>
+    switch(beer) {
+    | Preview(beer) =>
+    <div key=beer.code>
+      <h3> (ReasonReact.stringToElement(beer.name)) </h3>
+      <Image src=beer.bottle.thumbnail />
+      <Ratings ratings=beer.ratings />
+    </div>
+    | Detail(beer) =>
     <div className="container">
       <div className="row">
         <div className="tile col-md-4">
@@ -40,67 +48,18 @@ let make = (~beer, ~onOrdered, _children) => {
             (ReasonReact.stringToElement(beer.name))
           </h2>
           <br />
-          <img className="image" src=beer.bottleImageLink height="350px" />
+          <Image src=beer.bottle.fullsize />
           <br />
           <br />
           <div dangerouslySetInnerHTML={"__html": beer.description} />
-          <div>
-            <h4> (ReasonReact.stringToElement("maltiness")) </h4>
-            (
-              ReasonReact.arrayToElement(
-                BeerPoints.maximumNumberOfPoints
-                |> Array.map((i: int) =>
-                     <BeerPoints
-                       key=(string_of_int(i))
-                       points=i
-                       numberOfPoints=beer.maltinessRating
-                     />
-                   ),
-              )
-            )
-          </div>
-          <div>
-            <h4> (ReasonReact.stringToElement("hoppiness")) </h4>
-            (
-              ReasonReact.arrayToElement(
-                BeerPoints.maximumNumberOfPoints
-                |> Array.map((i: int) =>
-                     <BeerPoints
-                       key=(string_of_int(i))
-                       points=i
-                       numberOfPoints=beer.hoppinessRating
-                     />
-                   ),
-              )
-            )
-          </div>
-          <div>
-            <span style=(ReactDOMRe.Style.make())>
-              <h4> (ReasonReact.stringToElement("bitterness")) </h4>
-            </span>
-            (
-              ReasonReact.arrayToElement(
-                BeerPoints.maximumNumberOfPoints
-                |> Array.map((i: int) =>
-                     <BeerPoints
-                       key=(string_of_int(i))
-                       points=i
-                       numberOfPoints=beer.bitternessRating
-                     />
-                   ),
-              )
-            )
-          </div>
+          <Ratings ratings=beer.ratings />
         </div>
         <div className="tile col-md-4">
           <h2 className="tile-title">
             (ReasonReact.stringToElement(beer.sort))
           </h2>
           <br />
-          <img
-            className="img-responsive center-block"
-            src=beer.labelImageLink
-          />
+          <Image src=beer.label.thumbnail />
           <br />
           <div dangerouslySetInnerHTML={"__html": beer.detail} />
           <button
@@ -111,5 +70,6 @@ let make = (~beer, ~onOrdered, _children) => {
           <br />
         </div>
       </div>
-    </div>,
+    </div>
+    }
 };

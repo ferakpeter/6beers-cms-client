@@ -1,23 +1,14 @@
 const path = require('path');
-const webpack = require('webpack');
-const WriteFilePlugin = require('write-file-webpack-plugin');
+const outputDir = path.join(__dirname, "public/");
+
+const isProd = process.env.NODE_ENV === 'production';
 
 module.exports = {
-  entry: [
-    'webpack-dev-server/client?http://localhost:8080',
-    'webpack/hot/only-dev-server',
-    './lib/js/src/index.js',
-  ],
+  entry: './src/index.js',
+  mode: isProd ? 'production' : 'development',
   output: {
-    filename: '[name].js',
-    path: path.join(__dirname, './public'),
-    publicPath: '/public'
+    path: outputDir,
+    publicPath: outputDir,
+    filename: 'index.js',
   },
-  plugins: [
-    new WriteFilePlugin({
-      log: false,
-      test: /main\.js/,
-    }),
-    new webpack.HotModuleReplacementPlugin(),
-  ]
 };

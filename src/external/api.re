@@ -141,19 +141,24 @@ let mapJsonValuesToState = (cmsContent:cmsNewsList) : apiItems => {
           priceLarge: beerDetailSubheadline.priceLarge,
           quantitySmall: beerDetailSubheadline.quantitySmall,
           quantityLarge: beerDetailSubheadline.quantityLarge,
-          bottleImageLink: Cms.absolutePath(beerInfo.picture.img.src),
-          bottleImageHeightSmall: Some(350),
-          bottleImageHeightLarge: Some(500),
-          glassImageLink: "",
-          glassImageHeightSmall: Some(350),
-          glassImageHeightLarge: Some(500),
-          labelImageLink: Cms.absolutePath(beerDetail.picture.img.src),
-          labelImageHeightSmall: Some(200),
-          labelImageHeightLarge: Some(400),
-          maltinessRating: beerDetailSubheadline.maltinessRating,
-          hoppinessRating: beerDetailSubheadline.hoppinessRating,
-          bitternessRating: beerDetailSubheadline.bitternessRating,
-          inShoppingCart: false };
+          bottle: {
+            thumbnail: Thumbnail(Some(Cms.absolutePath(beerInfo.picture.img.src)), Some(350)),
+            fullsize: Fullsize(Some(Cms.absolutePath(beerInfo.picture.img.src)), Some(500))
+          },
+          glass: {
+            thumbnail: Thumbnail(None, Some(350)),
+            fullsize: Fullsize(None, Some(500))
+          },
+          label: {
+            thumbnail: Thumbnail(Some(Cms.absolutePath(beerDetail.picture.img.src)), Some(200)),
+            fullsize: Fullsize(Some(Cms.absolutePath(beerDetail.picture.img.src)), Some(400))
+          },
+          ratings: [|
+            Maltiness("maltiness", beerDetailSubheadline.maltinessRating),
+            Hoppiness("hoppiness", beerDetailSubheadline.hoppinessRating),
+            Bitterness("bitterness", beerDetailSubheadline.bitternessRating)
+          |]
+        };
 
         result;
       });

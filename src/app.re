@@ -1,7 +1,7 @@
 type routes =
   | Brewery
   | Beer
-  | Order
+  | AboutUs
   | Contact
   | All;
 
@@ -10,7 +10,7 @@ let urlToSelectedRoute = hash =>
     | "beer"  => Beer
     | "brewery" => Brewery
     | "contact" => Contact
-    | "order" => Order
+    | "aboutus" => AboutUs
     | _ => All
 };
 
@@ -48,11 +48,6 @@ let saveLocally = (shoppingCart: list(string)) =>
   | None => ()
   | Some(stringifiedShoppingCart) =>
     Dom.Storage.(localStorage |> setItem(namespace, stringifiedShoppingCart))
-  };
-
-let updateBottleImageHeight = (beers, id, change) =>
-  {
-    List.map(((item:Beer.beer) => item.id == id ? {...item, bottleImageHeightSmall: Some(BeerTeaser.fallbackDefaultImageHeight(item.bottleImageHeightSmall) + change)} : item), beers);
   };
 
 let addBeerToShoppingCart = (beerCode, _event) => AddBeerToShoppingCart(beerCode);
@@ -104,9 +99,9 @@ let make = _children => {
     | ApiCallFailed => ReasonReact.Update({...state, apiStatus: Failed})
     | UpdateUi(beers, news) => ReasonReact.Update({...state, apiStatus: Loaded, availableBeers: beers, news})
     | IncreaseBottleImage(beerId) => 
-      ReasonReact.Update({...state, availableBeers: updateBottleImageHeight(state.availableBeers, beerId, 20)})
+      ReasonReact.Update({...state, availableBeers: state.availableBeers})
     | DecreaseBottleImage(beerId) => 
-      ReasonReact.Update({...state, availableBeers: updateBottleImageHeight(state.availableBeers, beerId, -20)})
+      ReasonReact.Update({...state, availableBeers: state.availableBeers})
     },
   didMount: self => {
     self.send(LoadApi);
@@ -126,7 +121,7 @@ let make = _children => {
       List.map
         (
           (b: Beer.beer) =>
-            <Beer beer=b key=b.code onOrdered=(_event => send(AddBeerToShoppingCart(b.code))) />
+            <Beer beer=Detail(b) key=b.code onOrdered=(_event => send(AddBeerToShoppingCart(b.code))) />
         , state.availableBeers)
         ;
     <div className="App">
@@ -135,14 +130,14 @@ let make = _children => {
         switch state.selectedRoute {
         | All =>
           <div>
-            <div style=(ReactDOMRe.Style.make(~padding="20px", ~margin="auto", ~width="90%", ()))>
-              <BeerTeaser beers=state.availableBeers onMouseOver=((beerId, _mouse) => send(IncreaseBottleImage(beerId))) onMouseOut=((beerId, _mouse) => send(DecreaseBottleImage(beerId))) />  
+            <div>
+              <Selection beers=Beer.(List.map((beer => beer), state.availableBeers)) onClicked=() />  
               <HorizontalSeparator />
               <Brewery />
               <HorizontalSeparator />
               <Teaser news=state.news />
               <HorizontalSeparator />
-              <BeerDescription />
+              <AboutUs />
               <HorizontalSeparator />
               <Contact />
               <br />
@@ -152,12 +147,12 @@ let make = _children => {
             </div>
             <Footer />
           </div>
-        | Beer => <BeerDescription />
-        | Brewery => <Brewery />
-        | Order => <div>
+        | Beer => <div>
             <h2> (ReasonReact.stringToElement("Available Beer")) </h2>
             (ReasonReact.arrayToElement(Array.of_list(beers)))
           </div>
+        | Brewery => <Brewery />
+        | AboutUs => <AboutUs />
         | Contact => <Contact />
         }
       )

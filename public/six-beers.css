@@ -939,6 +939,7 @@ body > .navbar-collapse .nav > li > a {
   font-size: 13px;
   line-height: 13px;
   padding: 24px 0;
+  font-family: 'Orbitron', sans-serif;
 }
 body > .navbar-collapse .nav > li > a:hover, body > .navbar-collapse .nav > li > a.active {
   color: #e59e2b;
