@@ -14,7 +14,7 @@ let make = _children => {
         </div>
         <div className="row"> <br /> </div>
         <div className="row">
-          <div className="col-md-8">
+          <div className="col-md-12">
             <div className="card">
               <h3>
                 (
@@ -29,39 +29,6 @@ let make = _children => {
                     "6 beers is a small private brewery from the Wienerwald region south of Vienna. We aim to create a unique drinking experience with outstanding Craftbeer that enriches every meal. To get a feeling of what our beers offer browse through our selection and get more information in the details for each beer type.",
                   )
                 )
-              </p>
-            </div>
-          </div>
-          <div className="col-md-4">
-            <div className="card">
-              <h3> (ReasonReact.stringToElement("Selection")) </h3>
-              <p>
-                (ReasonReact.stringToElement("Bohemian (Lager)"))
-                <br />
-                (ReasonReact.stringToElement("Gold Rush (California Common)"))
-                <br />
-                (ReasonReact.stringToElement("TropicAle (American Pale Ale)"))
-                <br />
-                (
-                  ReasonReact.stringToElement(
-                    "Moonlight (Vermont Imperial IPA)",
-                  )
-                )
-                <br />
-                (ReasonReact.stringToElement("Ryebow (Pale Ale)"))
-                <br />
-                (
-                  ReasonReact.stringToElement(
-                    "Houses of the Hops (India Pale Ale)",
-                  )
-                )
-                <br />
-                (ReasonReact.stringToElement("Hey Oh (Coffee Stout)"))
-                <br />
-                (ReasonReact.stringToElement("Black Dog (Black IPA)"))
-                <br />
-                (ReasonReact.stringToElement("Dark Face (Porter)"))
-                <br />
               </p>
             </div>
           </div>

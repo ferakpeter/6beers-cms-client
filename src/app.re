@@ -6,13 +6,13 @@ type routes =
   | All;
 
 let urlToSelectedRoute = hash =>
-  switch(hash) {
-    | "beer"  => Beer
-    | "brewery" => Brewery
-    | "contact" => Contact
-    | "aboutus" => AboutUs
-    | _ => All
-};
+  switch (hash) {
+  | "beer" => Beer
+  | "brewery" => Brewery
+  | "contact" => Contact
+  | "aboutus" => AboutUs
+  | _ => All
+  };
 
 type actions =
   /* route Actions */
@@ -36,7 +36,7 @@ type state = {
   shoppingCart: list(string),
   news: list(Teaser.news),
   selectedRoute: routes,
-  apiStatus: apiStatus
+  apiStatus,
 };
 
 let namespace = "6beers-client-app";
@@ -50,7 +50,8 @@ let saveLocally = (shoppingCart: list(string)) =>
     Dom.Storage.(localStorage |> setItem(namespace, stringifiedShoppingCart))
   };
 
-let addBeerToShoppingCart = (beerCode, _event) => AddBeerToShoppingCart(beerCode);
+let addBeerToShoppingCart = (beerCode, _event) =>
+  AddBeerToShoppingCart(beerCode);
 
 let component = ReasonReact.reducerComponent("App");
 
@@ -58,49 +59,71 @@ let make = _children => {
   ...component,
   initialState: () => {
     let shoppingCartBeerCodes =
-      switch Dom.Storage.(localStorage |> getItem(namespace)) {
+      switch (Dom.Storage.(localStorage |> getItem(namespace))) {
       | None => []
       | Some(shoppingCart) => unsafeJsonParse(shoppingCart)
       };
-    {availableBeers: [], shoppingCart: shoppingCartBeerCodes, news: [], selectedRoute: urlToSelectedRoute(ReasonReact.Router.dangerouslyGetInitialUrl().hash), apiStatus: Loading}
+    {
+      availableBeers: [],
+      shoppingCart: shoppingCartBeerCodes,
+      news: [],
+      selectedRoute:
+        urlToSelectedRoute(
+          ReasonReact.Router.dangerouslyGetInitialUrl().hash,
+        ),
+      apiStatus: Loading,
+    };
   },
   reducer: (action, state) =>
     switch (action) {
     /* router actions */
-    | Navigate(page) => ReasonReact.Update({...state, selectedRoute: page })
+    | Navigate(page) => ReasonReact.Update({...state, selectedRoute: page})
     /* User Actions */
     | AddBeerToShoppingCart(beer) =>
       let shoppingCart = List.append(state.shoppingCart, [beer]);
       Js.log(shoppingCart);
-      ReasonReact.UpdateWithSideEffects({...state, shoppingCart}, (_self => saveLocally(shoppingCart)))
+      ReasonReact.UpdateWithSideEffects(
+        {...state, shoppingCart},
+        (_self => saveLocally(shoppingCart)),
+      );
     /* Api actions */
     | LoadApi =>
-    ReasonReact.UpdateWithSideEffects(
+      ReasonReact.UpdateWithSideEffects(
         {...state, apiStatus: Loading},
         (
           self =>
             Js.Promise.(
-              Fetch.fetch(Cms.absolutePath("index.php/api.html?modul=NewsList&limit=1000"))
+              Fetch.fetch(
+                Cms.absolutePath(
+                  "index.php/api.html?modul=NewsList&limit=1000",
+                ),
+              )
               |> then_(Fetch.Response.json)
               |> then_(json =>
-                  json
-                  |> Api.parseConfig
-                  |> Api.mapJsonValuesToState
-                  |> (items => { self.send(UpdateUi(items.beers, items.news)); })
-                  |> resolve
-                )
-              |> catch(_err =>
-                  Js.Promise.resolve(self.send(ApiCallFailed))
-                )
+                   json
+                   |> Api.parseConfig
+                   |> Api.mapJsonValuesToState
+                   |> (
+                     items => self.send(UpdateUi(items.beers, items.news))
+                   )
+                   |> resolve
+                 )
+              |> catch(_err => Js.Promise.resolve(self.send(ApiCallFailed)))
               |> ignore
             )
         ),
       )
     | ApiCallFailed => ReasonReact.Update({...state, apiStatus: Failed})
-    | UpdateUi(beers, news) => ReasonReact.Update({...state, apiStatus: Loaded, availableBeers: beers, news})
-    | IncreaseBottleImage(beerId) => 
+    | UpdateUi(beers, news) =>
+      ReasonReact.Update({
+        ...state,
+        apiStatus: Loaded,
+        availableBeers: beers,
+        news,
+      })
+    | IncreaseBottleImage(beerId) =>
       ReasonReact.Update({...state, availableBeers: state.availableBeers})
-    | DecreaseBottleImage(beerId) => 
+    | DecreaseBottleImage(beerId) =>
       ReasonReact.Update({...state, availableBeers: state.availableBeers})
     },
   didMount: self => {
@@ -113,25 +136,31 @@ let make = _children => {
         ReasonReact.Router.watchUrl(url =>
           self.send(Navigate(urlToSelectedRoute(url.hash)))
         ),
-        ReasonReact.Router.unwatchUrl,
+      ReasonReact.Router.unwatchUrl,
     ),
   ],
   render: ({state, send}) => {
     let beers =
-      List.map
-        (
-          (b: Beer.beer) =>
-            <Beer beer=Detail(b) key=b.code onOrdered=(_event => send(AddBeerToShoppingCart(b.code))) />
-        , state.availableBeers)
-        ;
+      List.map(
+        (b: Beer.beer) =>
+          <Beer
+            beer=(Detail(b))
+            key=b.code
+            onOrdered=(_event => send(AddBeerToShoppingCart(b.code)))
+          />,
+        state.availableBeers,
+      );
     <div className="App">
       <Header />
       (
-        switch state.selectedRoute {
+        switch (state.selectedRoute) {
         | All =>
           <div>
             <div>
-              <Selection beers=Beer.(List.map((beer => beer), state.availableBeers)) onClicked=() />  
+              <Selection
+                beers=Beer.(List.map(beer => beer, state.availableBeers))
+                onClicked=()
+              />
               <HorizontalSeparator />
               <Brewery />
               <HorizontalSeparator />
@@ -147,7 +176,8 @@ let make = _children => {
             </div>
             <Footer />
           </div>
-        | Beer => <div>
+        | Beer =>
+          <div>
             <h2> (ReasonReact.stringToElement("Available Beer")) </h2>
             (ReasonReact.arrayToElement(Array.of_list(beers)))
           </div>
@@ -156,6 +186,6 @@ let make = _children => {
         | Contact => <Contact />
         }
       )
-    </div>
-  }
+    </div>;
+  },
 };

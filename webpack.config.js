@@ -9,6 +9,6 @@ module.exports = {
   output: {
     path: outputDir,
     publicPath: outputDir,
-    filename: 'index.js',
+    filename: 'main.js',
   },
 };
