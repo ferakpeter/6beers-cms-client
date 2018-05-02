@@ -5,9 +5,7 @@ let component = ReasonReact.statelessComponent("Contact");
 [@bs.val]
 external copyEmailToClipboard : string => unit = "copyEmailToClipboard";
 
-[@bs.val]
-external initMap : unit => unit = "init_map";
-
+[@bs.val] external initMap : unit => unit = "init_map";
 
 let copyEmail = _event => copyEmailToClipboard("");
 
@@ -20,14 +18,16 @@ let make = _children => {
     ReasonReact.NoUpdate;
   },
   render: _self =>
-    <div className="section section-contact" id="contact">
+    <div className="section" id="contact">
       <div className="container">
         <div className="title">
           <h2> (ReasonReact.stringToElement("Contact us")) </h2>
           <p> (ReasonReact.stringToElement("6 beers brewering company")) </p>
           <p>
             (
-              ReasonReact.stringToElement("Margaritenweg 23, 2384 Breitenfurt Austria")
+              ReasonReact.stringToElement(
+                "Margaritenweg 23, 2384 Breitenfurt Austria",
+              )
             )
           </p>
           <p> (ReasonReact.stringToElement("Tel.: +43 677 624 168 66")) </p>

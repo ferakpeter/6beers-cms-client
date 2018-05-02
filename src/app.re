@@ -157,8 +157,9 @@ let make = _children => {
         | All =>
           <div>
             <div>
+              <br />
               <Selection
-                beers=Beer.(List.map(beer => beer, state.availableBeers))
+                beers=(List.map(beer => beer, state.availableBeers))
                 onClicked=()
               />
               <HorizontalSeparator />
@@ -177,10 +178,7 @@ let make = _children => {
             <Footer />
           </div>
         | Beer =>
-          <div>
-            <h2> (ReasonReact.stringToElement("Available Beer")) </h2>
-            (ReasonReact.arrayToElement(Array.of_list(beers)))
-          </div>
+          <div> (ReasonReact.arrayToElement(Array.of_list(beers))) </div>
         | Brewery => <Brewery />
         | AboutUs => <AboutUs />
         | Contact => <Contact />

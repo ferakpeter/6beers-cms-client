@@ -50,8 +50,12 @@ let make = (~news, _children) => {
         <h2 className="center-block">
           (ReasonReact.stringToElement("News"))
         </h2>
-        <Slider slidesToShow=3 dots=true autoplaySpeed=5000> (ReasonReact.arrayToElement(newsElements(news))) </Slider>
-        <br />
+        <div style=(ReactDOMRe.Style.make(~width="90%", ~margin="auto", ()))>
+          <Slider slidesToShow=3 dots=true autoplaySpeed=5000>
+            (ReasonReact.arrayToElement(newsElements(news)))
+          </Slider>
+          <br />
+        </div>
       </div>
     </div>,
 };

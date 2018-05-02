@@ -1,11 +1,6 @@
 body {
-  font-family: Open Sans, sans-serif;
+  font-family: 'Orbitron', sans-serif;
   background-color: #f6f4f4;
-}
-
-code {
-  font-family: Courier New;
-  color: #8f8f8f;
 }
 
 .App {

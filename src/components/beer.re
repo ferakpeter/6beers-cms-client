@@ -1,9 +1,9 @@
 type graphic = {
   thumbnail: Image.image,
-  fullsize: Image.image
+  fullsize: Image.image,
 };
 
-type beer = { 
+type beer = {
   id: int,
   code: string,
   name: string,
@@ -33,43 +33,35 @@ let component = ReasonReact.statelessComponent("Beer");
 let make = (~beer, ~onOrdered, _children) => {
   ...component,
   render: _self =>
-    switch(beer) {
+    switch (beer) {
     | Preview(beer) =>
-    <div key=beer.code>
-      <h3> (ReasonReact.stringToElement(beer.name)) </h3>
-      <Image src=beer.bottle.thumbnail />
-      <Ratings ratings=beer.ratings />
-    </div>
+      <div style=(ReactDOMRe.Style.make(~padding="5px", ())) key=beer.code>
+        <h3> (ReasonReact.stringToElement(beer.name)) </h3>
+        <Image src=beer.bottle.thumbnail />
+        <Ratings ratings=beer.ratings />
+      </div>
     | Detail(beer) =>
-    <div className="container">
-      <div className="row">
-        <div className="tile col-md-4">
-          <h2 className="tile-title">
-            (ReasonReact.stringToElement(beer.name))
-          </h2>
-          <br />
-          <Image src=beer.bottle.fullsize />
-          <br />
-          <br />
-          <div dangerouslySetInnerHTML={"__html": beer.description} />
-          <Ratings ratings=beer.ratings />
-        </div>
-        <div className="tile col-md-4">
-          <h2 className="tile-title">
-            (ReasonReact.stringToElement(beer.sort))
-          </h2>
-          <br />
-          <Image src=beer.label.thumbnail />
-          <br />
-          <div dangerouslySetInnerHTML={"__html": beer.detail} />
-          <button
-            onClick=(clicked(beer.name))
-            className="btn btn-success btn-large btn-block">
-            (ReasonReact.stringToElement("Order"))
-          </button>
-          <br />
+      <div className="container">
+        <div className="row">
+          <div className="tile col-md-12">
+            <h1 className="tile-title">
+              (ReasonReact.stringToElement(beer.name))
+            </h1>
+            <h5 className="tile-title">
+              (ReasonReact.stringToElement(beer.sort))
+            </h5>
+            <br />
+            <Image src=beer.bottle.fullsize />
+            <br />
+            <div dangerouslySetInnerHTML={"__html": beer.description} />
+            <div dangerouslySetInnerHTML={"__html": beer.detail} />
+            <button
+              onClick=(clicked(beer.name))
+              className="btn btn-success btn-large btn-block">
+              (ReasonReact.stringToElement("Order"))
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-    }
+    },
 };
