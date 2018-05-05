@@ -22,7 +22,10 @@ let beerPoint = (points, numberOfPoints, title) =>
   </span>;
 
 let ratingsRow = (title, rating) =>
-  <div key=title className="div-table-row">
+  <div
+    key=title
+    style=(ReactDOMRe.Style.make(~padding="2px", ()))
+    className="div-table-row">
     <span className="div-table-col div-fixed-width-col">
       <h4 className="beerPoints"> (ReasonReact.stringToElement(title)) </h4>
     </span>

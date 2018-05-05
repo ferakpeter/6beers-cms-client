@@ -36,8 +36,10 @@ let make = (~beer, ~onOrdered, _children) => {
     switch (beer) {
     | Preview(beer) =>
       <div style=(ReactDOMRe.Style.make(~padding="5px", ())) key=beer.code>
-        <h3> (ReasonReact.stringToElement(beer.name)) </h3>
-        <Image src=beer.bottle.thumbnail />
+        <h3 style=(ReactDOMRe.Style.make(~marginBottom="5px", ()))>
+          (ReasonReact.stringToElement(beer.name))
+        </h3>
+        <Image src=beer.bottle.thumbnail className="center margin-bottom" />
         <Ratings ratings=beer.ratings />
       </div>
     | Detail(beer) =>
@@ -51,7 +53,7 @@ let make = (~beer, ~onOrdered, _children) => {
               (ReasonReact.stringToElement(beer.sort))
             </h5>
             <br />
-            <Image src=beer.bottle.fullsize />
+            <Image src=beer.bottle.fullsize className="center" />
             <br />
             <div dangerouslySetInnerHTML={"__html": beer.description} />
             <div dangerouslySetInnerHTML={"__html": beer.detail} />

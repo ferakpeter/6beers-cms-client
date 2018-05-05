@@ -3710,3 +3710,7 @@ body.noscroll {
 .App {
   text-align: center;
 }
+
+.bottom-margin {
+  margin-bottom: 5px;
+}

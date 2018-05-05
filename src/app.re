@@ -1,13 +1,13 @@
 type routes =
   | Brewery
-  | Beer
+  | Beer(option(int))
   | AboutUs
   | Contact
   | All;
 
 let urlToSelectedRoute = hash =>
   switch (hash) {
-  | "beer" => Beer
+  | "beer" => Beer(None)
   | "brewery" => Brewery
   | "contact" => Contact
   | "aboutus" => AboutUs
@@ -33,6 +33,7 @@ type apiStatus =
 
 type state = {
   availableBeers: list(Beer.beer),
+  selectedBeer: option(Beer.beer),
   shoppingCart: list(string),
   news: list(Teaser.news),
   selectedRoute: routes,
@@ -53,6 +54,9 @@ let saveLocally = (shoppingCart: list(string)) =>
 let addBeerToShoppingCart = (beerCode, _event) =>
   AddBeerToShoppingCart(beerCode);
 
+let navigateToBeer = (send, name, _event, beerId) =>
+  send(Navigate(Beer(beerId)));
+
 let component = ReasonReact.reducerComponent("App");
 
 let make = _children => {
@@ -65,6 +69,7 @@ let make = _children => {
       };
     {
       availableBeers: [],
+      selectedBeer: None,
       shoppingCart: shoppingCartBeerCodes,
       news: [],
       selectedRoute:
@@ -160,7 +165,7 @@ let make = _children => {
               <br />
               <Selection
                 beers=(List.map(beer => beer, state.availableBeers))
-                onClicked=()
+                onClicked=(code => send(AddBeerToShoppingCart(code)))
               />
               <HorizontalSeparator />
               <Brewery />
@@ -177,8 +182,22 @@ let make = _children => {
             </div>
             <Footer />
           </div>
-        | Beer =>
-          <div> (ReasonReact.arrayToElement(Array.of_list(beers))) </div>
+        | Beer(beerId) =>
+          switch (beerId) {
+          | None =>
+            <div> (ReasonReact.arrayToElement(Array.of_list(beers))) </div>
+          | Some(id) =>
+            let b: Beer.beer =
+              List.find(
+                (beer: Beer.beer) => beer.id == id,
+                state.availableBeers,
+              );
+            <Beer
+              beer=(Detail(b))
+              key=b.code
+              onOrdered=(_event => send(AddBeerToShoppingCart(b.code)))
+            />;
+          }
         | Brewery => <Brewery />
         | AboutUs => <AboutUs />
         | Contact => <Contact />

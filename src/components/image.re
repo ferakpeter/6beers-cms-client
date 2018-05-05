@@ -11,16 +11,48 @@ let make = (~src, ~className: option(string)=?, _children) => {
     switch (src) {
     | Thumbnail(Some(imageSource), Some(height)) =>
       <img
-        style=(ReactDOMRe.Style.make(~margin="auto", ()))
+        className=(
+          switch (className) {
+          | Some(className) => className
+          | None => ""
+          }
+        )
         src=imageSource
         height=(string_of_int(height) ++ "px")
       />
     | Thumbnail(Some(imageSource), None) =>
-      <img src=imageSource height="150px" />
+      <img
+        className=(
+          switch (className) {
+          | Some(className) => className
+          | None => ""
+          }
+        )
+        src=imageSource
+        height="150px"
+      />
     | Fullsize(Some(imageSource), Some(height)) =>
-      <img src=imageSource height=(string_of_int(height) ++ "px") />
+      <img
+        className=(
+          switch (className) {
+          | Some(className) => className
+          | None => ""
+          }
+        )
+        src=imageSource
+        height=(string_of_int(height) ++ "px")
+      />
     | Fullsize(Some(imageSource), None) =>
-      <img src=imageSource height="500px" />
+      <img
+        className=(
+          switch (className) {
+          | Some(className) => className
+          | None => ""
+          }
+        )
+        src=imageSource
+        height="500px"
+      />
     | _ => <img src="assets/img/fallback.jpg" height="350px" />
     },
 };
