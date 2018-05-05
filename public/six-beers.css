@@ -356,6 +356,7 @@ body > .navbar-collapse a {
 .navbar .navbar-nav > li > a.btn {
   margin: 15px 3px;
   padding: 8px 16px;
+  
 }
 .navbar .navbar-nav > li > a.btn-round {
   margin: 16px 3px;
@@ -3634,6 +3635,7 @@ body.noscroll {
   .btn {
     margin: 0 auto 15px;
     float: none;
+    font-family: 'Orbitron', sans-serif;
   }
 
   .section-contact-3 .address-container {
