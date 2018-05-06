@@ -16,6 +16,7 @@
     "start:parallel": "npm-run-all --parallel start:bsb start:webpack",
     "start:bsb": "npm run build:bsb -- -w",
     "start:webpack": "webpack -w",
+    "start:staging": "node scripts/webpackDevServer.js",
     "jest": "jest",
     "test": "npm-run-all build:bsb jest"
   },
@@ -36,8 +37,7 @@
     "react-flipcard": "^0.2.1",
     "react-slick": "^0.23.1",
     "reason-react": "^0.3.4",
-    "slick-carousel": "^1.8.1",
-    "webpack-cli": "^2.0.15"
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
     "bs-jest": "^0.1.0",
@@ -48,7 +48,9 @@
     "pushstate-server": "^3.0.0",
     "reason-cli": "https://github.com/reasonml/reason-cli.git#beta-v-1.13.6-bin-darwin",
     "rimraf": "^2.6.1",
-    "webpack": "^4.0.1"
+    "webpack": "^4.0.1",
+    "webpack-dev-server": "^3.1.4",
+    "webpack-cli": "^2.0.15"
   },
   "jest": {
     "roots": [

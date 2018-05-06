@@ -3,6 +3,7 @@ type routes =
   | Beer(option(string))
   | AboutUs
   | Contact
+  | Terms
   | All;
 
 let urlToSelectedRoute = hash =>
@@ -11,6 +12,7 @@ let urlToSelectedRoute = hash =>
   | "brewery" => Brewery
   | "contact" => Contact
   | "aboutus" => AboutUs
+  | "termsconditions" => Terms
   | _ => All
   };
 
@@ -57,12 +59,6 @@ let saveLocally = (shoppingCart: list(string)) =>
     | exn => Js.log("no local storage available in this browser")
     }
   };
-
-let addBeerToShoppingCart = (beerCode, _event) =>
-  AddBeerToShoppingCart(beerCode);
-
-let navigateToBeer = (send, name, _event, beerId) =>
-  send(Navigate(Beer(beerId)));
 
 let component = ReasonReact.reducerComponent("App");
 
@@ -203,8 +199,8 @@ let make = _children => {
                 height="200px"
                 inverseColors=false
               />
+              <Footer />
             </div>
-            <Footer />
           </div>
         | Beer(beerCode) =>
           <div className="section" id="beer">
@@ -238,6 +234,7 @@ let make = _children => {
         | Brewery => <Brewery />
         | AboutUs => <AboutUs />
         | Contact => <Contact />
+        | Terms => <div> <Terms /> <Footer /> </div>
         }
       )
     </div>;
