@@ -25,9 +25,7 @@ type actions =
   /* external API calls */
   | LoadApi
   | ApiCallFailed
-  | UpdateUi(list(Beer.beer), list(Teaser.news))
-  | IncreaseBottleImage(int)
-  | DecreaseBottleImage(int);
+  | UpdateUi(list(Beer.beer), list(Teaser.news));
 
 type apiStatus =
   | Loading
@@ -36,7 +34,6 @@ type apiStatus =
 
 type state = {
   availableBeers: list(Beer.beer),
-  selectedBeer: option(string),
   shoppingCart: list(string),
   news: list(Teaser.news),
   selectedRoute: routes,
@@ -78,7 +75,6 @@ let make = _children => {
       };
     {
       availableBeers: [],
-      selectedBeer: None,
       shoppingCart: shoppingCartBeerCodes,
       news: [],
       selectedRoute:
@@ -102,11 +98,7 @@ let make = _children => {
       );
     | SelectBeer(beerCode) =>
       Js.log("clicked on " ++ beerCode);
-      ReasonReact.Update({
-        ...state,
-        selectedRoute: Beer(Some(beerCode)),
-        selectedBeer: Some(beerCode),
-      });
+      ReasonReact.Update({...state, selectedRoute: Beer(Some(beerCode))});
     /* Api actions */
     | LoadApi =>
       ReasonReact.UpdateWithSideEffects(
@@ -142,10 +134,6 @@ let make = _children => {
         availableBeers: beers,
         news,
       })
-    | IncreaseBottleImage(beerId) =>
-      ReasonReact.Update({...state, availableBeers: state.availableBeers})
-    | DecreaseBottleImage(beerId) =>
-      ReasonReact.Update({...state, availableBeers: state.availableBeers})
     },
   didMount: self => {
     self.send(LoadApi);
