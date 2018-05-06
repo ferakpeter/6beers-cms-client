@@ -8,7 +8,12 @@ let make = _children => {
         <div className="navbar-header">
           <button id="menu-toggle" className="navbar-toggle" />
           <a className="navbar-brand" href="#">
-            (ReasonReact.stringToElement("Shop"))
+            <table>
+              <td> <Logo className="" inverseColors=true height="50px" /> </td>
+              <td className="vertical-middle">
+                (ReasonReact.stringToElement("Shop"))
+              </td>
+            </table>
           </a>
         </div>
         <div className="collapse navbar-collapse">

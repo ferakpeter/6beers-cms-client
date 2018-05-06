@@ -190,7 +190,11 @@ let make = _children => {
               <AboutUs />
               <HorizontalSeparator />
               <Contact />
-              <Logo height="200px" inverseColors=false />
+              <Logo
+                className="img-responsive center-block"
+                height="200px"
+                inverseColors=false
+              />
             </div>
             <Footer />
           </div>
