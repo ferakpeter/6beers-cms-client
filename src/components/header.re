@@ -9,10 +9,16 @@ let make = _children => {
           <button id="menu-toggle" className="navbar-toggle" />
           <a className="navbar-brand" href="#">
             <table>
-              <td> <Logo className="" inverseColors=true height="50px" /> </td>
-              <td className="vertical-middle">
-                (ReasonReact.stringToElement("Shop"))
-              </td>
+              <tbody>
+                <tr>
+                  <td>
+                    <Logo className="" inverseColors=true height="50px" />
+                  </td>
+                  <td className="vertical-middle">
+                    (ReasonReact.stringToElement("Shop"))
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </a>
         </div>

@@ -1,6 +1,6 @@
 type routes =
   | Brewery
-  | Beer(option(int))
+  | Beer(option(string))
   | AboutUs
   | Contact
   | All;
@@ -19,6 +19,7 @@ type actions =
   | Navigate(routes)
   /* User actions */
   | AddBeerToShoppingCart(string)
+  | SelectBeer(string)
   /* external API calls */
   | LoadApi
   | ApiCallFailed
@@ -33,7 +34,7 @@ type apiStatus =
 
 type state = {
   availableBeers: list(Beer.beer),
-  selectedBeer: option(Beer.beer),
+  selectedBeer: option(string),
   shoppingCart: list(string),
   news: list(Teaser.news),
   selectedRoute: routes,
@@ -103,6 +104,13 @@ let make = _children => {
         {...state, shoppingCart},
         (_self => saveLocally(shoppingCart)),
       );
+    | SelectBeer(beerCode) =>
+      Js.log("clicked on " ++ beerCode);
+      ReasonReact.Update({
+        ...state,
+        selectedRoute: Beer(Some(beerCode)),
+        selectedBeer: Some(beerCode),
+      });
     /* Api actions */
     | LoadApi =>
       ReasonReact.UpdateWithSideEffects(
@@ -178,7 +186,7 @@ let make = _children => {
                 <div className="container">
                   <Selection
                     beers=(List.map(beer => beer, state.availableBeers))
-                    onClicked=(code => send(AddBeerToShoppingCart(code)))
+                    onClicked=((code, _event) => send(SelectBeer(code)))
                   />
                 </div>
               </div>
@@ -198,20 +206,20 @@ let make = _children => {
             </div>
             <Footer />
           </div>
-        | Beer(beerId) =>
+        | Beer(beerCode) =>
           <div className="section" id="beer">
             <div className="container">
-              <h2> (ReasonReact.stringToElement("Beer")) </h2>
               (
-                switch (beerId) {
+                switch (beerCode) {
                 | None =>
                   <div>
+                    <h2> (ReasonReact.stringToElement("Beer")) </h2>
                     (ReasonReact.arrayToElement(Array.of_list(beers)))
                   </div>
-                | Some(id) =>
+                | Some(code) =>
                   let b: Beer.beer =
                     List.find(
-                      (beer: Beer.beer) => beer.id == id,
+                      (beer: Beer.beer) => beer.code == code,
                       state.availableBeers,
                     );
                   <Beer

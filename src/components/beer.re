@@ -45,21 +45,25 @@ let make = (~beer, ~onOrdered, _children) => {
     | Detail(beer) =>
       <div className="row tile">
         <div className="col-12 margin-xl">
-          <h1 className="tile-title margin-m">
+          <h2 className="tile-title margin-m">
             (ReasonReact.stringToElement(beer.name))
-          </h1>
-          <h5 className="tile-title">
+          </h2>
+          <h3 className="tile-title">
             (ReasonReact.stringToElement(beer.sort))
-          </h5>
+          </h3>
         </div>
         <div className="col-md-4">
           <Image src=beer.bottle.fullsize className="center" />
         </div>
         <div className="col-md-4 padding-l">
+          <Ratings ratings=beer.ratings />
+        </div>
+        <div className="col-md-4">
+          <h5> (ReasonReact.stringToElement("Description")) </h5>
           <div dangerouslySetInnerHTML={"__html": beer.description} />
         </div>
-        <div className="col-md-4"> <Ratings ratings=beer.ratings /> </div>
         <div className="col-md-8">
+          <h5> (ReasonReact.stringToElement("Details")) </h5>
           <div dangerouslySetInnerHTML={"__html": beer.detail} />
         </div>
         <div className="col-md-12 margin-l">
