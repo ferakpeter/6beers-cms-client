@@ -184,7 +184,13 @@ let make = _children => {
               <HorizontalSeparator />
               <Brewery />
               <HorizontalSeparator />
-              <Teaser news=state.news />
+              (
+                switch (state.apiStatus) {
+                | Failed
+                | Loading => <ContentLoader />
+                | Loaded => <Teaser news=state.news />
+                }
+              )
               <HorizontalSeparator />
               <AboutUs />
               <HorizontalSeparator />
