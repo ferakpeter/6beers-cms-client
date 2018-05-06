@@ -168,16 +168,29 @@ let make = _children => {
             <div>
               <div className="section margin-top-l" id="selection-container">
                 <div className="container">
-                  <Selection
-                    beers=(List.map(beer => beer, state.availableBeers))
-                    onClicked=((code, _event) => send(SelectBeer(code)))
-                  />
+                  (
+                    switch (state.apiStatus) {
+                    | Failed
+                    | Loading => <ContentLoader />
+                    | Loaded =>
+                      <Selection
+                        beers=(List.map(beer => beer, state.availableBeers))
+                        onClicked=((code, _event) => send(SelectBeer(code)))
+                      />
+                    }
+                  )
                 </div>
               </div>
               <HorizontalSeparator />
               <Brewery />
               <HorizontalSeparator />
-              <Teaser news=state.news />
+              (
+                switch (state.apiStatus) {
+                | Failed
+                | Loading => <ContentLoader />
+                | Loaded => <Teaser news=state.news />
+                }
+              )
               <HorizontalSeparator />
               <AboutUs />
               <HorizontalSeparator />
