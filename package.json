@@ -34,7 +34,7 @@
     "react": "^16.3.0",
     "react-dom": "^16.3.0",
     "react-flipcard": "^0.2.1",
-    "react-slick": "^0.22.3",
+    "react-slick": "^0.23.1",
     "reason-react": "^0.3.4",
     "slick-carousel": "^1.8.1",
     "webpack-cli": "^2.0.15"
