@@ -12,7 +12,7 @@ let newsElements = (news: list(news)) =>
   news
   |> List.map((n: news) =>
        <div style=(ReactDOMRe.Style.make(~marginBottom="10px", ())) key=n.id>
-         <h3> (ReasonReact.stringToElement(n.title)) </h3>
+         <h5> (ReasonReact.stringToElement(n.title)) </h5>
          <div style=(ReactDOMRe.Style.make(~margin="5px", ()))>
            (
              switch (n.link) {

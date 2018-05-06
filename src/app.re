@@ -48,7 +48,13 @@ let saveLocally = (shoppingCart: list(string)) =>
   switch (Js.Json.stringifyAny(shoppingCart)) {
   | None => ()
   | Some(stringifiedShoppingCart) =>
-    Dom.Storage.(localStorage |> setItem(namespace, stringifiedShoppingCart))
+    try (
+      Dom.Storage.(
+        localStorage |> setItem(namespace, stringifiedShoppingCart)
+      )
+    ) {
+    | exn => Js.log("no local storage available in this browser")
+    }
   };
 
 let addBeerToShoppingCart = (beerCode, _event) =>
@@ -62,8 +68,14 @@ let component = ReasonReact.reducerComponent("App");
 let make = _children => {
   ...component,
   initialState: () => {
+    let items =
+      try (Dom.Storage.(localStorage |> getItem(namespace))) {
+      | exn =>
+        Js.log("local storage not available in this browser");
+        None;
+      };
     let shoppingCartBeerCodes =
-      switch (Dom.Storage.(localStorage |> getItem(namespace))) {
+      switch (items) {
       | None => []
       | Some(shoppingCart) => unsafeJsonParse(shoppingCart)
       };
@@ -162,11 +174,14 @@ let make = _children => {
         | All =>
           <div>
             <div>
-              <br />
-              <Selection
-                beers=(List.map(beer => beer, state.availableBeers))
-                onClicked=(code => send(AddBeerToShoppingCart(code)))
-              />
+              <div className="section margin-top-l" id="selection-container">
+                <div className="container">
+                  <Selection
+                    beers=(List.map(beer => beer, state.availableBeers))
+                    onClicked=(code => send(AddBeerToShoppingCart(code)))
+                  />
+                </div>
+              </div>
               <HorizontalSeparator />
               <Brewery />
               <HorizontalSeparator />
@@ -175,29 +190,35 @@ let make = _children => {
               <AboutUs />
               <HorizontalSeparator />
               <Contact />
-              <br />
-              <br />
               <Logo height="200px" inverseColors=false />
-              <br />
             </div>
             <Footer />
           </div>
         | Beer(beerId) =>
-          switch (beerId) {
-          | None =>
-            <div> (ReasonReact.arrayToElement(Array.of_list(beers))) </div>
-          | Some(id) =>
-            let b: Beer.beer =
-              List.find(
-                (beer: Beer.beer) => beer.id == id,
-                state.availableBeers,
-              );
-            <Beer
-              beer=(Detail(b))
-              key=b.code
-              onOrdered=(_event => send(AddBeerToShoppingCart(b.code)))
-            />;
-          }
+          <div className="section" id="beer">
+            <div className="container">
+              <h2> (ReasonReact.stringToElement("Beer")) </h2>
+              (
+                switch (beerId) {
+                | None =>
+                  <div>
+                    (ReasonReact.arrayToElement(Array.of_list(beers)))
+                  </div>
+                | Some(id) =>
+                  let b: Beer.beer =
+                    List.find(
+                      (beer: Beer.beer) => beer.id == id,
+                      state.availableBeers,
+                    );
+                  <Beer
+                    beer=(Detail(b))
+                    key=b.code
+                    onOrdered=(_event => send(AddBeerToShoppingCart(b.code)))
+                  />;
+                }
+              )
+            </div>
+          </div>
         | Brewery => <Brewery />
         | AboutUs => <AboutUs />
         | Contact => <Contact />

@@ -184,7 +184,7 @@ let mapJsonValuesToState = (cmsContent: cmsNewsList) : apiItems => {
              fullsize:
                Fullsize(
                  Some(Cms.absolutePath(beerInfo.picture.img.src)),
-                 Some(500),
+                 Some(350),
                ),
            },
            glass: {

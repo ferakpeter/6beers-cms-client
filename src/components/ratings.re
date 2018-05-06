@@ -39,9 +39,7 @@ let ratingsRow = (title, rating) =>
 let make = (~ratings, ~className: option(string)=?, _children) => {
   ...component,
   render: _self =>
-    <div
-      style=(ReactDOMRe.Style.make(~margin="auto", ()))
-      className="tile div-table">
+    <div className="center div-table">
       (
         ReasonReact.arrayToElement(
           ratings

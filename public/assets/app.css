@@ -28,22 +28,3 @@ body {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
-
-.div-table {
-  display: table;         
-  width: auto;
-  border-spacing: 5px; /* cellspacing:poor IE support for  this */
-}
-.div-table-row {
-  display: table-row;
-  width: auto;
-  clear: both;
-}
-.div-table-col {
-  float: left; /* fix for  buggy browsers */
-  display: table-column;  
-}
-
-.div-fixed-width-col {
-  width: 150px;
-}

@@ -8,7 +8,7 @@ let make = _children => {
         <div className="navbar-header">
           <button id="menu-toggle" className="navbar-toggle" />
           <a className="navbar-brand" href="#">
-            (ReasonReact.stringToElement("6 beers brewing co."))
+            (ReasonReact.stringToElement("Shop"))
           </a>
         </div>
         <div className="collapse navbar-collapse">

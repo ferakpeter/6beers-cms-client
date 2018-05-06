@@ -22,28 +22,26 @@ let make = _children => {
       <div className="container">
         <div className="title">
           <h2> (ReasonReact.stringToElement("Contact us")) </h2>
-          <p> (ReasonReact.stringToElement("6 beers brewering company")) </p>
-          <p>
-            (
-              ReasonReact.stringToElement(
-                "Margaritenweg 23, 2384 Breitenfurt Austria",
-              )
-            )
-          </p>
-          <p> (ReasonReact.stringToElement("Tel.: +43 677 624 168 66")) </p>
-          <p>
-            <button onClick=copyEmail className="btn btn-large">
-              (
-                ReasonReact.stringToElement("Copy E-mail address to clipboard")
-              )
-            </button>
-          </p>
-          <p>
-            <button onClick=openEmail className="btn btn-success btn-large">
-              (ReasonReact.stringToElement("Open E-mail"))
-            </button>
-          </p>
         </div>
+        <p> (ReasonReact.stringToElement("6 beers brewering company")) </p>
+        <p>
+          (
+            ReasonReact.stringToElement(
+              "Margaritenweg 23, 2384 Breitenfurt Austria",
+            )
+          )
+        </p>
+        <p> (ReasonReact.stringToElement("Tel.: +43 677 624 168 66")) </p>
+        <p>
+          <button onClick=copyEmail className="btn btn-large">
+            (ReasonReact.stringToElement("Copy E-mail address to clipboard"))
+          </button>
+        </p>
+        <p>
+          <button onClick=openEmail className="btn btn-success btn-large">
+            (ReasonReact.stringToElement("Open E-mail"))
+          </button>
+        </p>
         <div className="row">
           <div
             id="map-container"

@@ -43,26 +43,31 @@ let make = (~beer, ~onOrdered, _children) => {
         <Ratings ratings=beer.ratings />
       </div>
     | Detail(beer) =>
-      <div className="container">
-        <div className="row">
-          <div className="tile col-md-12">
-            <h1 className="tile-title">
-              (ReasonReact.stringToElement(beer.name))
-            </h1>
-            <h5 className="tile-title">
-              (ReasonReact.stringToElement(beer.sort))
-            </h5>
-            <br />
-            <Image src=beer.bottle.fullsize className="center" />
-            <br />
-            <div dangerouslySetInnerHTML={"__html": beer.description} />
-            <div dangerouslySetInnerHTML={"__html": beer.detail} />
-            <button
-              onClick=(clicked(beer.name))
-              className="btn btn-success btn-large btn-block">
-              (ReasonReact.stringToElement("Order"))
-            </button>
-          </div>
+      <div className="row tile">
+        <div className="col-12 margin-xl">
+          <h1 className="tile-title margin-m">
+            (ReasonReact.stringToElement(beer.name))
+          </h1>
+          <h5 className="tile-title">
+            (ReasonReact.stringToElement(beer.sort))
+          </h5>
+        </div>
+        <div className="col-md-4">
+          <Image src=beer.bottle.fullsize className="center" />
+        </div>
+        <div className="col-md-4 padding-l">
+          <div dangerouslySetInnerHTML={"__html": beer.description} />
+        </div>
+        <div className="col-md-4"> <Ratings ratings=beer.ratings /> </div>
+        <div className="col-md-8">
+          <div dangerouslySetInnerHTML={"__html": beer.detail} />
+        </div>
+        <div className="col-md-12 margin-l">
+          <button
+            onClick=(clicked(beer.name))
+            className="btn btn-success btn-large btn-block">
+            (ReasonReact.stringToElement("Order"))
+          </button>
         </div>
       </div>
     },

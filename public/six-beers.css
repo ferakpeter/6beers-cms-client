@@ -17,11 +17,12 @@ article, aside, canvas, details, embed,
 figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
+	margin: 0;
 	padding: 0;
 	border: 0;
 	font-size: 100%;
 	font: inherit;
-	vertical-align: baseline;
+  vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
@@ -45,6 +46,16 @@ q:before, q:after {
 table {
 	border-collapse: collapse;
 	border-spacing: 0;
+}
+
+.tile-hover {
+  padding:5px;
+  cursor: pointer;
+}
+
+.tile-hover:hover {
+  background-color:#ebebeb;
+  border-radius:6px;
 }
 
 h1 small, h2 small, h3 small, h1 .small, h2 .small, h3 .small {
@@ -113,7 +124,7 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
 
   .navbar-collapse,
   .navbar-form {
-    border-color: @navbar-default-form-border;
+    border-color: #ebebeb;
     border-width: 2px;
   }
 
@@ -547,9 +558,6 @@ body > .navbar-collapse a {
 .footer nav > ul a:not(.btn):hover, .footer nav > ul a:not(.btn):focus {
   color: #e59e2b;
 }
-.footer .social-area {
-  padding: 15px 0;
-}
 .footer .social-area h5 {
   padding-bottom: 15px;
 }
@@ -557,21 +565,27 @@ body > .navbar-collapse a {
   color: #FFFFFF;
   display: inline-block;
   vertical-align: top;
-  padding: 10px 5px;
   font-size: 20px;
   font-weight: normal;
-  line-height: 20px;
   text-align: center;
+}
+.footer .social-area {
+  padding: 15px 0;
 }
 .footer .social-area > a:not(.btn):hover, .footer .social-area > a:not(.btn):focus {
   color: #e59e2b;
 }
 .footer .copyright {
   color: #fff;
+  line-height: 20px;
   padding: 10px 15px;
   margin: 15px 3px;
-  line-height: 20px;
   text-align: center;
+  font-size: 13px;
+}
+.footer:not(.footer-big) nav > ul a {
+  padding: 10px 0px;
+  margin: 15px 10px 15px 0px;
 }
 .copyright > a {
   color: #fff;
@@ -589,10 +603,6 @@ body > .navbar-collapse a {
 .footer:not(.footer-big) nav > ul li {
   margin-left: 20px;
   float: left;
-}
-.footer:not(.footer-big) nav > ul a {
-  padding: 10px 0px;
-  margin: 15px 10px 15px 0px;
 }
 
 .footer-color-gray {
@@ -1641,7 +1651,7 @@ p,
 label,
 .form-control,
 .title h5 {
-  font-family: "Droid Serif", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'Orbitron', sans-serif;
 }
 
 .title {
@@ -3704,7 +3714,7 @@ body.noscroll {
 }
 
 .div-fixed-width-col {
-  width: 150px;
+  width: 120px;
 }
 
 .App {
@@ -3713,4 +3723,40 @@ body.noscroll {
 
 .bottom-margin {
   margin-bottom: 5px;
+}
+
+.top-margin {
+  margin-top: 3px;
+}
+
+.margin-s {
+  margin: 3px;
+}
+
+.margin-m {
+  margin: 7px;
+}
+
+.margin-l {
+  margin: 10px;
+}
+
+.margin-xl {
+  margin: 20px;
+}
+
+.margin-top-l {
+  margin-top: 25px;
+}
+
+.padding-m {
+  padding: 7px;
+}
+
+.padding-l {
+  padding: 10px;
+}
+
+.padding-xl {
+  padding: 20px;
 }
