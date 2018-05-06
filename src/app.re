@@ -222,11 +222,15 @@ let make = _children => {
                       (beer: Beer.beer) => beer.code == code,
                       state.availableBeers,
                     );
-                  <Beer
-                    beer=(Detail(b))
-                    key=b.code
-                    onOrdered=(_event => send(AddBeerToShoppingCart(b.code)))
-                  />;
+                  <div className="row margin-top-l">
+                    <Beer
+                      beer=(Detail(b))
+                      key=b.code
+                      onOrdered=(
+                        _event => send(AddBeerToShoppingCart(b.code))
+                      )
+                    />
+                  </div>;
                 }
               )
             </div>
