@@ -17,19 +17,23 @@ let beerMock: Beer.beer = {
   priceLarge: 4.5,
   quantitySmall: 100,
   quantityLarge: 100,
-  bottleImageLink: "string",
-  bottleImageHeightSmall: Some(350),
-  bottleImageHeightLarge: Some(500),
-  glassImageLink: "string",
-  glassImageHeightSmall: Some(350),
-  glassImageHeightLarge: Some(500),
-  labelImageLink: "",
-  labelImageHeightSmall: Some(200),
-  labelImageHeightLarge: Some(400),
-  maltinessRating: 1,
-  hoppinessRating: 3,
-  bitternessRating: 4,
-  inShoppingCart: false,
+  bottle: {
+    thumbnail: Thumbnail(Some("string"), Some(350)),
+    fullsize: Fullsize(Some("string"), Some(500)),
+  },
+  glass: {
+    thumbnail: Thumbnail(Some("string"), Some(350)),
+    fullsize: Fullsize(Some("string"), Some(500)),
+  },
+  label: {
+    thumbnail: Thumbnail(Some("string"), Some(200)),
+    fullsize: Fullsize(Some("string"), Some(400)),
+  },
+  ratings: [|
+    Maltiness("maltiness", 1),
+    Hoppiness("hoppiness", 3),
+    Bitterness("bitterness", 4),
+  |],
 };
 
 let apiItems: Api.apiItems = {news: [newsMock], beers: [beerMock]};

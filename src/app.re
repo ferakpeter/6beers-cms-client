@@ -1,30 +1,31 @@
 type routes =
   | Brewery
-  | Beer
-  | Order
+  | Beer(option(string))
+  | AboutUs
   | Contact
+  | Terms
   | All;
 
 let urlToSelectedRoute = hash =>
-  switch(hash) {
-    | "beer"  => Beer
-    | "brewery" => Brewery
-    | "contact" => Contact
-    | "order" => Order
-    | _ => All
-};
+  switch (hash) {
+  | "beer" => Beer(None)
+  | "brewery" => Brewery
+  | "contact" => Contact
+  | "aboutus" => AboutUs
+  | "termsconditions" => Terms
+  | _ => All
+  };
 
 type actions =
   /* route Actions */
   | Navigate(routes)
   /* User actions */
   | AddBeerToShoppingCart(string)
+  | SelectBeer(string)
   /* external API calls */
   | LoadApi
   | ApiCallFailed
-  | UpdateUi(list(Beer.beer), list(Teaser.news))
-  | IncreaseBottleImage(int)
-  | DecreaseBottleImage(int);
+  | UpdateUi(list(Beer.beer), list(Teaser.news));
 
 type apiStatus =
   | Loading
@@ -36,7 +37,7 @@ type state = {
   shoppingCart: list(string),
   news: list(Teaser.news),
   selectedRoute: routes,
-  apiStatus: apiStatus
+  apiStatus,
 };
 
 let namespace = "6beers-client-app";
@@ -47,66 +48,92 @@ let saveLocally = (shoppingCart: list(string)) =>
   switch (Js.Json.stringifyAny(shoppingCart)) {
   | None => ()
   | Some(stringifiedShoppingCart) =>
-    Dom.Storage.(localStorage |> setItem(namespace, stringifiedShoppingCart))
+    try (
+      Dom.Storage.(
+        localStorage |> setItem(namespace, stringifiedShoppingCart)
+      )
+    ) {
+    | exn => Js.log("no local storage available in this browser")
+    }
   };
-
-let updateBottleImageHeight = (beers, id, change) =>
-  {
-    List.map(((item:Beer.beer) => item.id == id ? {...item, bottleImageHeightSmall: Some(BeerTeaser.fallbackDefaultImageHeight(item.bottleImageHeightSmall) + change)} : item), beers);
-  };
-
-let addBeerToShoppingCart = (beerCode, _event) => AddBeerToShoppingCart(beerCode);
 
 let component = ReasonReact.reducerComponent("App");
 
 let make = _children => {
   ...component,
   initialState: () => {
+    let items =
+      try (Dom.Storage.(localStorage |> getItem(namespace))) {
+      | exn =>
+        Js.log("local storage not available in this browser");
+        None;
+      };
     let shoppingCartBeerCodes =
-      switch Dom.Storage.(localStorage |> getItem(namespace)) {
+      switch (items) {
       | None => []
       | Some(shoppingCart) => unsafeJsonParse(shoppingCart)
       };
-    {availableBeers: [], shoppingCart: shoppingCartBeerCodes, news: [], selectedRoute: urlToSelectedRoute(ReasonReact.Router.dangerouslyGetInitialUrl().hash), apiStatus: Loading}
+    {
+      availableBeers: [],
+      shoppingCart: shoppingCartBeerCodes,
+      news: [],
+      selectedRoute:
+        urlToSelectedRoute(
+          ReasonReact.Router.dangerouslyGetInitialUrl().hash,
+        ),
+      apiStatus: Loading,
+    };
   },
   reducer: (action, state) =>
     switch (action) {
     /* router actions */
-    | Navigate(page) => ReasonReact.Update({...state, selectedRoute: page })
+    | Navigate(page) => ReasonReact.Update({...state, selectedRoute: page})
     /* User Actions */
     | AddBeerToShoppingCart(beer) =>
       let shoppingCart = List.append(state.shoppingCart, [beer]);
       Js.log(shoppingCart);
-      ReasonReact.UpdateWithSideEffects({...state, shoppingCart}, (_self => saveLocally(shoppingCart)))
+      ReasonReact.UpdateWithSideEffects(
+        {...state, shoppingCart},
+        (_self => saveLocally(shoppingCart)),
+      );
+    | SelectBeer(beerCode) =>
+      Js.log("clicked on " ++ beerCode);
+      ReasonReact.Update({...state, selectedRoute: Beer(Some(beerCode))});
     /* Api actions */
     | LoadApi =>
-    ReasonReact.UpdateWithSideEffects(
+      ReasonReact.UpdateWithSideEffects(
         {...state, apiStatus: Loading},
         (
           self =>
             Js.Promise.(
-              Fetch.fetch(Cms.absolutePath("index.php/api.html?modul=NewsList&limit=1000"))
+              Fetch.fetch(
+                Cms.absolutePath(
+                  "index.php/api.html?modul=NewsList&limit=1000",
+                ),
+              )
               |> then_(Fetch.Response.json)
               |> then_(json =>
-                  json
-                  |> Api.parseConfig
-                  |> Api.mapJsonValuesToState
-                  |> (items => { self.send(UpdateUi(items.beers, items.news)); })
-                  |> resolve
-                )
-              |> catch(_err =>
-                  Js.Promise.resolve(self.send(ApiCallFailed))
-                )
+                   json
+                   |> Api.parseConfig
+                   |> Api.mapJsonValuesToState
+                   |> (
+                     items => self.send(UpdateUi(items.beers, items.news))
+                   )
+                   |> resolve
+                 )
+              |> catch(_err => Js.Promise.resolve(self.send(ApiCallFailed)))
               |> ignore
             )
         ),
       )
     | ApiCallFailed => ReasonReact.Update({...state, apiStatus: Failed})
-    | UpdateUi(beers, news) => ReasonReact.Update({...state, apiStatus: Loaded, availableBeers: beers, news})
-    | IncreaseBottleImage(beerId) => 
-      ReasonReact.Update({...state, availableBeers: updateBottleImageHeight(state.availableBeers, beerId, 20)})
-    | DecreaseBottleImage(beerId) => 
-      ReasonReact.Update({...state, availableBeers: updateBottleImageHeight(state.availableBeers, beerId, -20)})
+    | UpdateUi(beers, news) =>
+      ReasonReact.Update({
+        ...state,
+        apiStatus: Loaded,
+        availableBeers: beers,
+        news,
+      })
     },
   didMount: self => {
     self.send(LoadApi);
@@ -118,49 +145,86 @@ let make = _children => {
         ReasonReact.Router.watchUrl(url =>
           self.send(Navigate(urlToSelectedRoute(url.hash)))
         ),
-        ReasonReact.Router.unwatchUrl,
+      ReasonReact.Router.unwatchUrl,
     ),
   ],
   render: ({state, send}) => {
     let beers =
-      List.map
-        (
-          (b: Beer.beer) =>
-            <Beer beer=b key=b.code onOrdered=(_event => send(AddBeerToShoppingCart(b.code))) />
-        , state.availableBeers)
-        ;
+      List.map(
+        (b: Beer.beer) =>
+          <Beer
+            beer=(Detail(b))
+            key=b.code
+            onOrdered=(_event => send(AddBeerToShoppingCart(b.code)))
+          />,
+        state.availableBeers,
+      );
     <div className="App">
       <Header />
       (
-        switch state.selectedRoute {
+        switch (state.selectedRoute) {
         | All =>
           <div>
-            <div style=(ReactDOMRe.Style.make(~padding="20px", ~margin="auto", ~width="90%", ()))>
-              <BeerTeaser beers=state.availableBeers onMouseOver=((beerId, _mouse) => send(IncreaseBottleImage(beerId))) onMouseOut=((beerId, _mouse) => send(DecreaseBottleImage(beerId))) />  
+            <div>
+              <div className="section margin-top-l" id="selection-container">
+                <div className="container">
+                  <Selection
+                    beers=(List.map(beer => beer, state.availableBeers))
+                    onClicked=((code, _event) => send(SelectBeer(code)))
+                  />
+                </div>
+              </div>
               <HorizontalSeparator />
               <Brewery />
               <HorizontalSeparator />
               <Teaser news=state.news />
               <HorizontalSeparator />
-              <BeerDescription />
+              <AboutUs />
               <HorizontalSeparator />
               <Contact />
-              <br />
-              <br />
-              <Logo height="200px" inverseColors=false />
-              <br />
+              <Logo
+                className="img-responsive center-block"
+                height="200px"
+                inverseColors=false
+              />
+              <Footer />
             </div>
-            <Footer />
           </div>
-        | Beer => <BeerDescription />
+        | Beer(beerCode) =>
+          <div className="section" id="beer">
+            <div className="container">
+              (
+                switch (beerCode) {
+                | None =>
+                  <div>
+                    <h2> (ReasonReact.stringToElement("Beer")) </h2>
+                    (ReasonReact.arrayToElement(Array.of_list(beers)))
+                  </div>
+                | Some(code) =>
+                  let b: Beer.beer =
+                    List.find(
+                      (beer: Beer.beer) => beer.code == code,
+                      state.availableBeers,
+                    );
+                  <div className="row margin-top-l">
+                    <Beer
+                      beer=(Detail(b))
+                      key=b.code
+                      onOrdered=(
+                        _event => send(AddBeerToShoppingCart(b.code))
+                      )
+                    />
+                  </div>;
+                }
+              )
+            </div>
+          </div>
         | Brewery => <Brewery />
-        | Order => <div>
-            <h2> (ReasonReact.stringToElement("Available Beer")) </h2>
-            (ReasonReact.arrayToElement(Array.of_list(beers)))
-          </div>
+        | AboutUs => <AboutUs />
         | Contact => <Contact />
+        | Terms => <div> <Terms /> <Footer /> </div>
         }
       )
-    </div>
-  }
+    </div>;
+  },
 };

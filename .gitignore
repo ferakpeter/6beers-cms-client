@@ -5,3 +5,4 @@ lib
 src/**/*.js
 src/*.js
 public/main.js
+.bsb.lock

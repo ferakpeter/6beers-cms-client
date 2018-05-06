@@ -12,7 +12,7 @@ let newsElements = (news: list(news)) =>
   news
   |> List.map((n: news) =>
        <div style=(ReactDOMRe.Style.make(~marginBottom="10px", ())) key=n.id>
-         <h3> (ReasonReact.stringToElement(n.title)) </h3>
+         <h5> (ReasonReact.stringToElement(n.title)) </h5>
          <div style=(ReactDOMRe.Style.make(~margin="5px", ()))>
            (
              switch (n.link) {
@@ -45,11 +45,17 @@ let newsElements = (news: list(news)) =>
 let make = (~news, _children) => {
   ...component,
   render: _self =>
-    <div>
-      <h2 className="center-block">
-        (ReasonReact.stringToElement("News"))
-      </h2>
-      <Slider slidesToShow=3 dots=true autoplaySpeed=5000> (ReasonReact.arrayToElement(newsElements(news))) </Slider>
-      <br />
+    <div className="section" id="selection">
+      <div className="container">
+        <h2 className="center-block">
+          (ReasonReact.stringToElement("News"))
+        </h2>
+        <div style=(ReactDOMRe.Style.make(~width="90%", ~margin="auto", ()))>
+          <Slider slidesToShow=3 dots=true autoplaySpeed=5000>
+            (ReasonReact.arrayToElement(newsElements(news)))
+          </Slider>
+          <br />
+        </div>
+      </div>
     </div>,
 };

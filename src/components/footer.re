@@ -9,7 +9,7 @@ let make = _children => {
           <ul>
             <li> <a href="#"> (ReasonReact.stringToElement("Home")) </a> </li>
             <li>
-              <a href="terms.html" target="_blank">
+              <a href="#termsconditions">
                 (ReasonReact.stringToElement("Terms & Conditions"))
               </a>
             </li>

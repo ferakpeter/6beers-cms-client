@@ -17,8 +17,9 @@
   "bs-dev-dependencies": [
     "bs-jest"
   ],
-  "js-post-build": {
-    "cmd": "./scripts/copy.js"
+  "package-specs": {
+    "module": "commonjs",
+    "in-source": true
   },
   "sources": [
     {
@@ -36,6 +37,9 @@
         },
         {
           "dir": "external"
+        },
+        {
+          "dir": "ui-elements"
         }
       ]
     }
