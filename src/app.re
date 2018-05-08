@@ -13,7 +13,14 @@ let urlToSelectedRoute = hash =>
   | "contact" => Contact
   | "aboutus" => AboutUs
   | "termsconditions" => Terms
-  | _ => All
+  | _ =>
+    if (hash != "") {
+      Js.log("hash was " ++ hash);
+      Beer(Some(hash));
+    } else {
+      Js.log("hash was nothing - showing all");
+      All;
+    }
   };
 
 type actions =
@@ -56,6 +63,11 @@ let saveLocally = (shoppingCart: list(string)) =>
     | exn => Js.log("no local storage available in this browser")
     }
   };
+
+let push = (path, event) => {
+  ReactEventRe.Mouse.preventDefault(event);
+  ReasonReact.Router.push("#" ++ path);
+};
 
 let component = ReasonReact.reducerComponent("App");
 
@@ -175,7 +187,7 @@ let make = _children => {
                     | Loaded =>
                       <Selection
                         beers=(List.map(beer => beer, state.availableBeers))
-                        onClicked=((code, _event) => send(SelectBeer(code)))
+                        onClicked=push
                       />
                     }
                   )
@@ -214,20 +226,24 @@ let make = _children => {
                     (ReasonReact.arrayToElement(Array.of_list(beers)))
                   </div>
                 | Some(code) =>
-                  let b: Beer.beer =
+                  switch (
                     List.find(
                       (beer: Beer.beer) => beer.code == code,
                       state.availableBeers,
-                    );
-                  <div className="row margin-top-l">
-                    <Beer
-                      beer=(Detail(b))
-                      key=b.code
-                      onOrdered=(
-                        _event => send(AddBeerToShoppingCart(b.code))
-                      )
-                    />
-                  </div>;
+                    )
+                  ) {
+                  | beer =>
+                    <div className="row margin-top-l">
+                      <Beer
+                        beer=(Detail(beer))
+                        key=beer.code
+                        onOrdered=(
+                          _event => send(AddBeerToShoppingCart(beer.code))
+                        )
+                      />
+                    </div>
+                  | exception Not_found => ReasonReact.nullElement
+                  }
                 }
               )
             </div>
