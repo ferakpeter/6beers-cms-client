@@ -45,17 +45,7 @@ let newsElements = (news: list(news)) =>
 let make = (~news, _children) => {
   ...component,
   render: _self =>
-    <div className="section" id="selection">
-      <div className="container">
-        <h2 className="center-block">
-          (ReasonReact.stringToElement("News"))
-        </h2>
-        <div>
-          <Slider slidesToShow=3 dots=true autoplaySpeed=5000>
-            (ReasonReact.arrayToElement(newsElements(news)))
-          </Slider>
-          <br />
-        </div>
-      </div>
-    </div>,
+    <Slider slidesToShow=3 dots=true autoplaySpeed=5000>
+      (ReasonReact.arrayToElement(newsElements(news)))
+    </Slider>,
 };

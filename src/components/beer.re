@@ -39,8 +39,12 @@ let make = (~beer, ~onOrdered, _children) => {
         <h3 style=(ReactDOMRe.Style.make(~marginBottom="5px", ()))>
           (ReasonReact.stringToElement(beer.name))
         </h3>
-        <Image src=beer.bottle.thumbnail className="center margin-bottom" />
-        <Ratings ratings=beer.ratings />
+        <Image
+          src=beer.bottle.thumbnail
+          className="center margin-bottom"
+          onClick=onOrdered
+        />
+        <Ratings ratings=beer.ratings onClick=onOrdered />
       </div>
     | Detail(beer) =>
       <div className="row tile">
@@ -53,10 +57,14 @@ let make = (~beer, ~onOrdered, _children) => {
           </h3>
         </div>
         <div className="col-md-4">
-          <Image src=beer.bottle.fullsize className="center" />
+          <Image
+            src=beer.bottle.fullsize
+            className="center"
+            onClick=onOrdered
+          />
         </div>
         <div className="col-md-4 padding-l">
-          <Ratings ratings=beer.ratings />
+          <Ratings ratings=beer.ratings onClick=onOrdered />
         </div>
         <div className="col-md-4">
           <h5> (ReasonReact.stringToElement("Description")) </h5>

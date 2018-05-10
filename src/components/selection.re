@@ -6,8 +6,16 @@ let beerElements = (beers: list(Beer.beer), onOrdered) =>
        <div
          className="tile-hover" key=beer.code onClick=(onOrdered(beer.code))>
          <h3> (ReasonReact.stringToElement(beer.name)) </h3>
-         <Image className="center bottom-margin" src=beer.bottle.thumbnail />
-         <Ratings className="center" ratings=beer.ratings />
+         <Image
+           className="center bottom-margin"
+           src=beer.bottle.thumbnail
+           onClick=(onOrdered(beer.code))
+         />
+         <Ratings
+           className="center"
+           ratings=beer.ratings
+           onClick=(onOrdered(beer.code))
+         />
        </div>
      )
   |> Array.of_list;

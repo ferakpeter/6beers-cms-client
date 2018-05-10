@@ -5,7 +5,7 @@ type image =
 
 let component = ReasonReact.statelessComponent("Image");
 
-let make = (~src, ~className: option(string)=?, _children) => {
+let make = (~src, ~className: option(string)=?, ~onClick, _children) => {
   ...component,
   render: _self =>
     switch (src) {
@@ -19,6 +19,7 @@ let make = (~src, ~className: option(string)=?, _children) => {
         )
         src=imageSource
         height=(string_of_int(height) ++ "px")
+        onClick
       />
     | Thumbnail(Some(imageSource), None) =>
       <img
@@ -30,6 +31,7 @@ let make = (~src, ~className: option(string)=?, _children) => {
         )
         src=imageSource
         height="150px"
+        onClick
       />
     | Fullsize(Some(imageSource), Some(height)) =>
       <img
@@ -41,6 +43,7 @@ let make = (~src, ~className: option(string)=?, _children) => {
         )
         src=imageSource
         height=(string_of_int(height) ++ "px")
+        onClick
       />
     | Fullsize(Some(imageSource), None) =>
       <img
@@ -52,6 +55,7 @@ let make = (~src, ~className: option(string)=?, _children) => {
         )
         src=imageSource
         height="500px"
+        onClick
       />
     | _ => <img src="assets/img/fallback.jpg" height="350px" />
     },

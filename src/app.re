@@ -15,10 +15,8 @@ let urlToSelectedRoute = hash =>
   | "termsconditions" => Terms
   | _ =>
     if (hash != "") {
-      Js.log("hash was " ++ hash);
       Beer(Some(hash));
     } else {
-      Js.log("hash was nothing - showing all");
       All;
     }
   };
@@ -60,7 +58,7 @@ let saveLocally = (shoppingCart: list(string)) =>
         localStorage |> setItem(namespace, stringifiedShoppingCart)
       )
     ) {
-    | exn => Js.log("no local storage available in this browser")
+    | exn => Js.log("local storage not available in this browser")
     }
   };
 
@@ -109,8 +107,7 @@ let make = _children => {
         (_self => saveLocally(shoppingCart)),
       );
     | SelectBeer(beerCode) =>
-      Js.log("clicked on " ++ beerCode);
-      ReasonReact.Update({...state, selectedRoute: Beer(Some(beerCode))});
+      ReasonReact.Update({...state, selectedRoute: Beer(Some(beerCode))})
     /* Api actions */
     | LoadApi =>
       ReasonReact.UpdateWithSideEffects(
@@ -183,7 +180,7 @@ let make = _children => {
                   (
                     switch (state.apiStatus) {
                     | Failed
-                    | Loading => <ContentLoader />
+                    | Loading => <LoadingAnimation loader=Facebook />
                     | Loaded =>
                       <Selection
                         beers=(List.map(beer => beer, state.availableBeers))
@@ -196,13 +193,22 @@ let make = _children => {
               <HorizontalSeparator />
               <Brewery />
               <HorizontalSeparator />
-              (
-                switch (state.apiStatus) {
-                | Failed
-                | Loading => <ContentLoader />
-                | Loaded => <Teaser news=state.news />
-                }
-              )
+              <div className="section" id="selection">
+                <div className="container">
+                  <h2 className="center-block">
+                    (ReasonReact.stringToElement("News"))
+                  </h2>
+                  <div>
+                    (
+                      switch (state.apiStatus) {
+                      | Failed
+                      | Loading => <LoadingAnimation loader=Instagram />
+                      | Loaded => <Teaser news=state.news />
+                      }
+                    )
+                  </div>
+                </div>
+              </div>
               <HorizontalSeparator />
               <AboutUs />
               <HorizontalSeparator />
