@@ -170,13 +170,13 @@ let make = _children => {
       );
     <div className="App">
       <Header />
-      (
-        switch (state.selectedRoute) {
-        | All =>
-          <div>
+      <div className="container">
+        (
+          switch (state.selectedRoute) {
+          | All =>
             <div>
-              <div className="section margin-top-l" id="selection-container">
-                <div className="container">
+              <div>
+                <div className="section margin-top-l" id="selection-container">
                   (
                     switch (state.apiStatus) {
                     | Failed
@@ -189,12 +189,10 @@ let make = _children => {
                     }
                   )
                 </div>
-              </div>
-              <HorizontalSeparator />
-              <Brewery />
-              <HorizontalSeparator />
-              <div className="section" id="selection">
-                <div className="container">
+                <HorizontalSeparator />
+                <Brewery />
+                <HorizontalSeparator />
+                <div className="section" id="selection">
                   <h2 className="center-block">
                     (ReasonReact.stringToElement("News"))
                   </h2>
@@ -208,22 +206,20 @@ let make = _children => {
                     )
                   </div>
                 </div>
+                <HorizontalSeparator />
+                <AboutUs />
+                <HorizontalSeparator />
+                <Contact />
+                <Logo
+                  className="img-responsive center-block"
+                  height="200px"
+                  inverseColors=false
+                />
+                <Footer />
               </div>
-              <HorizontalSeparator />
-              <AboutUs />
-              <HorizontalSeparator />
-              <Contact />
-              <Logo
-                className="img-responsive center-block"
-                height="200px"
-                inverseColors=false
-              />
-              <Footer />
             </div>
-          </div>
-        | Beer(beerCode) =>
-          <div className="section" id="beer">
-            <div className="container">
+          | Beer(beerCode) =>
+            <div className="section" id="beer">
               (
                 switch (beerCode) {
                 | None =>
@@ -253,13 +249,13 @@ let make = _children => {
                 }
               )
             </div>
-          </div>
-        | Brewery => <Brewery />
-        | AboutUs => <AboutUs />
-        | Contact => <Contact />
-        | Terms => <div> <Terms /> <Footer /> </div>
-        }
-      )
+          | Brewery => <Brewery />
+          | AboutUs => <AboutUs />
+          | Contact => <Contact />
+          | Terms => <div> <Terms /> <Footer /> </div>
+          }
+        )
+      </div>
     </div>;
   },
 };
