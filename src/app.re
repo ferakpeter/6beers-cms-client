@@ -215,7 +215,6 @@ let make = _children => {
                   height="200px"
                   inverseColors=false
                 />
-                <Footer />
               </div>
             </div>
           | Beer(beerCode) =>
@@ -252,10 +251,11 @@ let make = _children => {
           | Brewery => <Brewery />
           | AboutUs => <AboutUs />
           | Contact => <Contact />
-          | Terms => <div> <Terms /> <Footer /> </div>
+          | Terms => <div> <Terms /> </div>
           }
         )
       </div>
+      <div> <Footer /> </div>
     </div>;
   },
 };
