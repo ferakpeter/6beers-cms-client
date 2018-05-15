@@ -3724,6 +3724,10 @@ body.noscroll {
   margin-bottom: 5px;
 }
 
+.bottom-margin-l {
+  margin-bottom: 10px;
+}
+
 .top-margin {
   margin-top: 3px;
 }
