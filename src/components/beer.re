@@ -36,6 +36,11 @@ let make = (~beer, ~onOrdered, _children) => {
     switch (beer) {
     | Preview(beer) =>
       <div style=(ReactDOMRe.Style.make(~padding="5px", ())) key=beer.code>
+        <img
+          src="assets/img/soldout.svg"
+          alt="soldout"
+          className="tile-hot-ribbon"
+        />
         <h3 style=(ReactDOMRe.Style.make(~marginBottom="5px", ()))>
           (ReasonReact.stringToElement(beer.name))
         </h3>

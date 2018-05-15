@@ -219,7 +219,7 @@ let make = _children => {
               </div>
             </div>
           | Beer(beerCode) =>
-            <div className="section" id="beer">
+            <div className="section">
               (
                 switch (beerCode) {
                 | None =>
