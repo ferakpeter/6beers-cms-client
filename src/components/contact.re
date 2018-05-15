@@ -20,6 +20,7 @@ type action =
   | ChangeName(string)
   | ChangeEmail(string)
   | ChangeText(string)
+  | Validate
   | ApiCallSucceeded
   | ApiCallFailed
   | Reset;
@@ -45,29 +46,6 @@ type state = {
 
 let component = ReasonReact.reducerComponent("Contact");
 
-/*
- postData('http://example.com/answer', {answer: 42})
-   .then(data => console.log(data)) // JSON from `response.json()` call
-   .catch(error => console.error(error))
-
- function postData(url, data) {
-   // Default options are marked with *
-   return fetch(url, {
-     body: JSON.stringify(data), // must match 'Content-Type' header
-     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-     credentials: 'same-origin', // include, same-origin, *omit
-     headers: {
-       'user-agent': 'Mozilla/4.0 MDN Example',
-       'content-type': 'application/json'
-     },
-     method: 'POST', // *GET, POST, PUT, DELETE, etc.
-     mode: 'cors', // no-cors, cors, *same-origin
-     redirect: 'follow', // manual, *follow, error
-     referrer: 'no-referrer', // *client, no-referrer
-   })
-   .then(response => response.json()) // parses response to JSON
- }
- */
 let submitContactForm = state => {
   Js.log(
     "testing: " ++ state.name.value ++ state.email.value ++ state.text.value,
@@ -104,12 +82,12 @@ let submitContactForm = state => {
               |]),
             /* ~credentials=Include, */
             ~mode=CORS,
-            /* ~referrer="no-referrer",
-               ~referrerPolicy=NoReferrer,
-               ~cache=NoCache,
-               ~redirect=Follow,
-               ~integrity="",
-               ~keepalive=true, */
+            ~referrer="no-referrer",
+            ~referrerPolicy=NoReferrer,
+            ~cache=NoCache,
+            ~redirect=Follow,
+            ~integrity="",
+            ~keepalive=false,
             (),
           ),
         )
@@ -175,6 +153,24 @@ let make = _children => {
             },
           });
         }
+      )
+    | Validate => (
+        state =>
+          ReasonReact.Update({
+            ...state,
+            name: {
+              ...state.name,
+              isValid: Js.Re.test(state.name.value, state.name.validator),
+            },
+            email: {
+              ...state.email,
+              isValid: Js.Re.test(state.email.value, state.email.validator),
+            },
+            text: {
+              ...state.text,
+              isValid: Js.Re.test(state.text.value, state.text.validator),
+            },
+          })
       )
     | ChangeEmail(text) => (
         state =>
@@ -244,6 +240,7 @@ let make = _children => {
                         value=state.name.value
                         placeholder="Name"
                         className="form-control"
+                        onBlur=(_event => send(Validate))
                         onChange=(
                           event =>
                             send(
@@ -269,6 +266,7 @@ let make = _children => {
                         className="form-control"
                         value=state.email.value
                         required=true
+                        onBlur=(_event => send(Validate))
                         onChange=(
                           event =>
                             send(
@@ -296,6 +294,7 @@ let make = _children => {
                         placeholder="Text"
                         rows=3
                         required=true
+                        onBlur=(_event => send(Validate))
                         onChange=(
                           event =>
                             send(
@@ -313,6 +312,11 @@ let make = _children => {
                 <div className="row bottom-margin-l">
                   <div className="col-md-12">
                     <button
+                      disabled=(
+                        ! state.name.isValid
+                        || ! state.email.isValid
+                        || ! state.text.isValid
+                      )
                       onClick=(_event => send(Submit))
                       className="btn btn-success btn-large btn-block">
                       (ReasonReact.stringToElement("Submit"))
