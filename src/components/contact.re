@@ -47,9 +47,6 @@ type state = {
 let component = ReasonReact.reducerComponent("Contact");
 
 let submitContactForm = state => {
-  Js.log(
-    "testing: " ++ state.name.value ++ state.email.value ++ state.text.value,
-  );
   let payload = Js.Dict.empty();
   Js.Dict.set(
     payload,
@@ -59,9 +56,7 @@ let submitContactForm = state => {
   Js.Dict.set(payload, "html", Js.Json.string(state.text.value));
   Js.Dict.set(payload, "to", Js.Json.string(state.email.value));
   let credentials = "Basic " ++ btoa("api:key");
-  Js.log(credentials);
   let req = Js.Json.stringify(Js.Json.object_(payload));
-  Js.log(req);
   ReasonReact.UpdateWithSideEffects(
     {...state, status: Loading},
     self =>

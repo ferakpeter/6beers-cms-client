@@ -116,7 +116,7 @@ let make = _children => {
           self =>
             Js.Promise.(
               Fetch.fetch(
-                Cms.absolutePath(
+                CmsApi.absolutePath(
                   "index.php/api.html?modul=NewsList&limit=1000",
                 ),
               )
