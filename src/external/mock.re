@@ -36,4 +36,4 @@ let beerMock: Beer.beer = {
   |],
 };
 
-let apiItems: Api.apiItems = {news: [newsMock], beers: [beerMock]};
+let apiItems: CmsApi.apiItems = {news: [newsMock], beers: [beerMock]};

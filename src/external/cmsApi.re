@@ -182,12 +182,12 @@ let mapJsonValuesToState = (cmsContent: cmsNewsList) : apiItems => {
            bottle: {
              thumbnail:
                Thumbnail(
-                 Some(Cms.absolutePath(beerInfo.picture.img.src)),
+                 Some(absolutePath(beerInfo.picture.img.src)),
                  Some(250),
                ),
              fullsize:
                Fullsize(
-                 Some(Cms.absolutePath(beerInfo.picture.img.src)),
+                 Some(absolutePath(beerInfo.picture.img.src)),
                  Some(350),
                ),
            },
@@ -198,12 +198,12 @@ let mapJsonValuesToState = (cmsContent: cmsNewsList) : apiItems => {
            label: {
              thumbnail:
                Thumbnail(
-                 Some(Cms.absolutePath(beerDetail.picture.img.src)),
+                 Some(absolutePath(beerDetail.picture.img.src)),
                  Some(200),
                ),
              fullsize:
                Fullsize(
-                 Some(Cms.absolutePath(beerDetail.picture.img.src)),
+                 Some(absolutePath(beerDetail.picture.img.src)),
                  Some(400),
                ),
            },
@@ -226,7 +226,7 @@ let mapJsonValuesToState = (cmsContent: cmsNewsList) : apiItems => {
          let mappedItem: Teaser.news = {
            id: n.headline,
            title: n.subheadline,
-           imageLink: Cms.absolutePath(n.picture.img.src),
+           imageLink: absolutePath(n.picture.img.src),
            link: n.picture.caption,
            content: n.teaser,
          };

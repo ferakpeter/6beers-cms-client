@@ -123,8 +123,8 @@ let make = _children => {
               |> then_(Fetch.Response.json)
               |> then_(json =>
                    json
-                   |> Api.parseConfig
-                   |> Api.mapJsonValuesToState
+                   |> CmsApi.parseConfig
+                   |> CmsApi.mapJsonValuesToState
                    |> (
                      items => self.send(UpdateUi(items.beers, items.news))
                    )
