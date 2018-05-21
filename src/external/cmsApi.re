@@ -1,6 +1,6 @@
-let cmsUrl = "https://www.6beers.at/cms/";
+let url = "https://www.6beers.at/cms/";
 
-let absolutePath = relativePath => String.concat("", [cmsUrl, relativePath]);
+let absolutePath = relativePath => String.concat("", [url, relativePath]);
 
 type cmsBeerSubheadline = {
   name: string,

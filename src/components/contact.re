@@ -3,8 +3,6 @@
 [@bs.val]
 external copyEmailToClipboard : string => unit = "copyEmailToClipboard";
 
-[@bs.val] external btoa : string => string = "btoa";
-
 [@bs.val] external initMap : unit => unit = "init_map";
 
 type t;
@@ -47,22 +45,18 @@ type state = {
 let component = ReasonReact.reducerComponent("Contact");
 
 let submitContactForm = state => {
-  let payload = Js.Dict.empty();
-  Js.Dict.set(
-    payload,
-    "subject",
-    Js.Json.string("Contact request from " ++ state.name.value),
-  );
-  Js.Dict.set(payload, "html", Js.Json.string(state.text.value));
-  Js.Dict.set(payload, "to", Js.Json.string(state.email.value));
-  let credentials = "Basic " ++ btoa("api:key");
-  let req = Js.Json.stringify(Js.Json.object_(payload));
+  let req =
+    EmailApi.createContactRequest(
+      state.name.value,
+      state.email.value,
+      state.text.value,
+    );
   ReasonReact.UpdateWithSideEffects(
     {...state, status: Loading},
     self =>
       Js.Promise.(
         Fetch.fetchWithInit(
-          "https://polar-brook-99163.herokuapp.com/api/contact/",
+          EmailApi.url,
           Fetch.RequestInit.make(
             ~method_=Post,
             ~body=Fetch.BodyInit.make(req),
