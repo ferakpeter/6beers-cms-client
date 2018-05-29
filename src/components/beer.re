@@ -75,9 +75,22 @@ let make = (~beer, ~onOrdered, _children) => {
           <h5> (ReasonReact.stringToElement("Description")) </h5>
           <div dangerouslySetInnerHTML={"__html": beer.description} />
         </div>
-        <div className="col-md-8">
+        <div className="col-md-5">
           <h5> (ReasonReact.stringToElement("Details")) </h5>
           <div dangerouslySetInnerHTML={"__html": beer.detail} />
+        </div>
+        <div className="col-md-3">
+          <h5> (ReasonReact.stringToElement("Price")) </h5>
+          <h2>
+            (ReasonReact.stringToElement(string_of_float(beer.priceSmall)))
+          </h2>
+          <p>
+            (
+              ReasonReact.stringToElement(
+                "(incl. VAT and Beertax) per 330ml bottle",
+              )
+            )
+          </p>
         </div>
         <div className="col-md-12 margin-l">
           <button

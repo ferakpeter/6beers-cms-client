@@ -40,6 +40,7 @@ type state = {
   name: requiredString,
   email: requiredString,
   text: requiredString,
+  validated: bool,
 };
 
 let component = ReasonReact.reducerComponent("Contact");
@@ -101,12 +102,12 @@ let openEmail = _event => contact("");
 let emptyState = {
   status: Idle,
   name: {
-    isValid: false,
+    isValid: true,
     value: "",
     validator: Js.Re.fromString(".+"),
   },
   email: {
-    isValid: false,
+    isValid: true,
     value: "",
     validator:
       Js.Re.fromString(
@@ -118,6 +119,7 @@ let emptyState = {
     value: "",
     validator: Js.Re.fromString(".+"),
   },
+  validated: false,
 };
 
 let make = _children => {
@@ -140,6 +142,7 @@ let make = _children => {
               value: text,
               isValid: Js.Re.test(state.name.value, state.name.validator),
             },
+            validated: true,
           });
         }
       )
@@ -159,6 +162,7 @@ let make = _children => {
               ...state.text,
               isValid: Js.Re.test(state.text.value, state.text.validator),
             },
+            validated: true,
           })
       )
     | ChangeEmail(text) => (
@@ -170,6 +174,7 @@ let make = _children => {
               value: text,
               isValid: Js.Re.test(state.email.value, state.email.validator),
             },
+            validated: true,
           })
       )
     | ChangeText(text) => (
@@ -181,6 +186,7 @@ let make = _children => {
               value: text,
               isValid: Js.Re.test(state.text.value, state.text.validator),
             },
+            validated: true,
           })
       )
     | KeyDown(13) => (state => submitContactForm(state))
@@ -302,7 +308,8 @@ let make = _children => {
                   <div className="col-md-12">
                     <button
                       disabled=(
-                        ! state.name.isValid
+                        ! state.validated
+                        || ! state.name.isValid
                         || ! state.email.isValid
                         || ! state.text.isValid
                       )

@@ -8,6 +8,8 @@ type contactRequest = {
   text: string,
 };
 
+type orderRequest = {beer: Beer.beer};
+
 let createContactRequest = (email, name, text) => {
   let payload = Js.Dict.empty();
   Js.Dict.set(
