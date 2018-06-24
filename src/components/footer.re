@@ -7,10 +7,10 @@ let make = _children => {
       <div className="container">
         <nav className="pull-left">
           <ul>
-            <li> <a href="#"> (ReasonReact.stringToElement("Home")) </a> </li>
+            <li> <a href="#"> (ReasonReact.string("Home")) </a> </li>
             <li>
               <a href="#termsconditions">
-                (ReasonReact.stringToElement("Terms & Conditions"))
+                (ReasonReact.string("Terms & Conditions"))
               </a>
             </li>
           </ul>
@@ -30,9 +30,9 @@ let make = _children => {
           </a>
         </div>
         <div className="copyright">
-          (ReasonReact.stringToElement("Copyright 2017 "))
+          (ReasonReact.string("Copyright 2017 "))
           <a target="_blank" href="http://www.6beers.at">
-            (ReasonReact.stringToElement("6 beers brewing co."))
+            (ReasonReact.string("6 beers brewing co."))
           </a>
         </div>
       </div>

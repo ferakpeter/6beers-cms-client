@@ -1,3 +1,7 @@
+let url = "https://www.6beers.at/cms/";
+
+let absolutePath = relativePath => String.concat("", [url, relativePath]);
+
 type cmsBeerSubheadline = {
   name: string,
   id: int,
@@ -12,6 +16,7 @@ type cmsBeerDetailSubheadline = {
   maltinessRating: int,
   hoppinessRating: int,
   bitternessRating: int,
+  foodPairing: string,
 };
 
 type cmsImg = {
@@ -137,7 +142,7 @@ let mapJsonValuesToState = (cmsContent: cmsNewsList) : apiItems => {
              Js.Re.exec(
                value,
                Js.Re.fromString(
-                 "(.+)\\/(.+)\\/(.+)\\/(.+)\\/(.+)\\/(.+)\\/(.+)",
+                 "(.+)\\/(.+)\\/(.+)\\/(.+)\\/(.+)\\/(.+)\\/(.+)\\/(.+)",
                ),
              );
            switch (parsedMatch) {
@@ -149,6 +154,7 @@ let mapJsonValuesToState = (cmsContent: cmsNewsList) : apiItems => {
                maltinessRating: 0,
                hoppinessRating: 0,
                bitternessRating: 0,
+               foodPairing: "",
              }
            | Some(match) => {
                priceSmall: float_of_string(Js.Re.matches(match)[1]),
@@ -158,12 +164,15 @@ let mapJsonValuesToState = (cmsContent: cmsNewsList) : apiItems => {
                maltinessRating: int_of_string(Js.Re.matches(match)[5]),
                hoppinessRating: int_of_string(Js.Re.matches(match)[6]),
                bitternessRating: int_of_string(Js.Re.matches(match)[7]),
+               foodPairing: Js.Re.matches(match)[8],
              }
            };
          };
          let beerSubheadline = parseBeerSubheadline(beerInfo.subheadline);
          let beerDetailSubheadline =
            parseBeerDetailSubheadline(beerDetail.subheadline);
+         
+
          let result: Beer.beer = {
            id: beerSubheadline.id,
            code: beercode,
@@ -171,6 +180,7 @@ let mapJsonValuesToState = (cmsContent: cmsNewsList) : apiItems => {
            sort: beerSubheadline.sort,
            description: beerInfo.teaser,
            detail: beerDetail.teaser,
+           foodPairing: beerDetailSubheadline.foodPairing,
            priceSmall: beerDetailSubheadline.priceSmall,
            priceLarge: beerDetailSubheadline.priceLarge,
            quantitySmall: beerDetailSubheadline.quantitySmall,
@@ -178,12 +188,12 @@ let mapJsonValuesToState = (cmsContent: cmsNewsList) : apiItems => {
            bottle: {
              thumbnail:
                Thumbnail(
-                 Some(Cms.absolutePath(beerInfo.picture.img.src)),
+                 Some(absolutePath(beerInfo.picture.img.src)),
                  Some(250),
                ),
              fullsize:
                Fullsize(
-                 Some(Cms.absolutePath(beerInfo.picture.img.src)),
+                 Some(absolutePath(beerInfo.picture.img.src)),
                  Some(350),
                ),
            },
@@ -194,12 +204,12 @@ let mapJsonValuesToState = (cmsContent: cmsNewsList) : apiItems => {
            label: {
              thumbnail:
                Thumbnail(
-                 Some(Cms.absolutePath(beerDetail.picture.img.src)),
+                 Some(absolutePath(beerDetail.picture.img.src)),
                  Some(200),
                ),
              fullsize:
                Fullsize(
-                 Some(Cms.absolutePath(beerDetail.picture.img.src)),
+                 Some(absolutePath(beerDetail.picture.img.src)),
                  Some(400),
                ),
            },
@@ -222,7 +232,7 @@ let mapJsonValuesToState = (cmsContent: cmsNewsList) : apiItems => {
          let mappedItem: Teaser.news = {
            id: n.headline,
            title: n.subheadline,
-           imageLink: Cms.absolutePath(n.picture.img.src),
+           imageLink: absolutePath(n.picture.img.src),
            link: n.picture.caption,
            content: n.teaser,
          };

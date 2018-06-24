@@ -15,7 +15,7 @@ let make = _children => {
                     <Logo className="" inverseColors=true height="50px" />
                   </td>
                   <td className="vertical-middle">
-                    (ReasonReact.stringToElement("Shop"))
+                    (ReasonReact.string("Shop"))
                   </td>
                 </tr>
               </tbody>
@@ -33,22 +33,14 @@ let make = _children => {
               </a>
             </li>
             <li>
-              <a href="#brewery">
-                (ReasonReact.stringToElement("Brewery"))
-              </a>
+              <a href="#brewery"> (ReasonReact.string("Brewery")) </a>
+            </li>
+            <li> <a href="#beer"> (ReasonReact.string("Beer")) </a> </li>
+            <li>
+              <a href="#aboutus"> (ReasonReact.string("About Us")) </a>
             </li>
             <li>
-              <a href="#beer"> (ReasonReact.stringToElement("Beer")) </a>
-            </li>
-            <li>
-              <a href="#aboutus">
-                (ReasonReact.stringToElement("About Us"))
-              </a>
-            </li>
-            <li>
-              <a href="#contact">
-                (ReasonReact.stringToElement("Contact Us"))
-              </a>
+              <a href="#contact"> (ReasonReact.string("Contact Us")) </a>
             </li>
           </ul>
         </div>

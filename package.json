@@ -37,12 +37,12 @@
     "react-dom": "^16.3.0",
     "react-flipcard": "^0.2.1",
     "react-slick": "^0.23.1",
-    "reason-react": "^0.3.4",
+    "reason-react": "^0.4.2",
     "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
     "bs-jest": "^0.1.0",
-    "bs-platform": "^3.0.0",
+    "bs-platform": "^3.1.5",
     "html-webpack-plugin": "^2.28.0",
     "jest": "^20.0.4",
     "npm-run-all": "^4.0.2",
@@ -50,8 +50,8 @@
     "reason-cli": "https://github.com/reasonml/reason-cli.git#beta-v-1.13.6-bin-darwin",
     "rimraf": "^2.6.1",
     "webpack": "^4.0.1",
-    "webpack-dev-server": "^3.1.4",
-    "webpack-cli": "^2.0.15"
+    "webpack-cli": "^2.0.15",
+    "webpack-dev-server": "^3.1.4"
   },
   "jest": {
     "roots": [

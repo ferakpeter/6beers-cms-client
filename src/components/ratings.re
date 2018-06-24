@@ -28,10 +28,10 @@ let ratingsRow = (title, rating, onClick) =>
     style=(ReactDOMRe.Style.make(~padding="2px", ()))
     className="div-table-row">
     <span className="div-table-col div-fixed-width-col" onClick>
-      <h4 className="beerPoints"> (ReasonReact.stringToElement(title)) </h4>
+      <h4 className="beerPoints"> (ReasonReact.string(title)) </h4>
     </span>
     (
-      ReasonReact.arrayToElement(
+      ReasonReact.array(
         ratingsPoints
         |> Array.map((i: int) => beerPoint(i, rating, title, onClick)),
       )
@@ -43,7 +43,7 @@ let make = (~ratings, ~onClick, ~className: option(string)=?, _children) => {
   render: _self =>
     <div className="center div-table">
       (
-        ReasonReact.arrayToElement(
+        ReasonReact.array(
           ratings
           |> Array.map(rating =>
                switch (rating) {

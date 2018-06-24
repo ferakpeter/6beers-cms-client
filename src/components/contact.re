@@ -3,8 +3,6 @@
 [@bs.val]
 external copyEmailToClipboard : string => unit = "copyEmailToClipboard";
 
-[@bs.val] external btoa : string => string = "btoa";
-
 [@bs.val] external initMap : unit => unit = "init_map";
 
 type t;
@@ -42,32 +40,24 @@ type state = {
   name: requiredString,
   email: requiredString,
   text: requiredString,
+  validated: bool,
 };
 
 let component = ReasonReact.reducerComponent("Contact");
 
 let submitContactForm = state => {
-  Js.log(
-    "testing: " ++ state.name.value ++ state.email.value ++ state.text.value,
-  );
-  let payload = Js.Dict.empty();
-  Js.Dict.set(
-    payload,
-    "subject",
-    Js.Json.string("Contact request from " ++ state.name.value),
-  );
-  Js.Dict.set(payload, "html", Js.Json.string(state.text.value));
-  Js.Dict.set(payload, "to", Js.Json.string(state.email.value));
-  let credentials = "Basic " ++ btoa("api:key");
-  Js.log(credentials);
-  let req = Js.Json.stringify(Js.Json.object_(payload));
-  Js.log(req);
+  let req =
+    EmailApi.createContactRequest(
+      state.name.value,
+      state.email.value,
+      state.text.value,
+    );
   ReasonReact.UpdateWithSideEffects(
     {...state, status: Loading},
     self =>
       Js.Promise.(
         Fetch.fetchWithInit(
-          "https://polar-brook-99163.herokuapp.com/api/contact/",
+          EmailApi.url,
           Fetch.RequestInit.make(
             ~method_=Post,
             ~body=Fetch.BodyInit.make(req),
@@ -112,12 +102,12 @@ let openEmail = _event => contact("");
 let emptyState = {
   status: Idle,
   name: {
-    isValid: false,
+    isValid: true,
     value: "",
     validator: Js.Re.fromString(".+"),
   },
   email: {
-    isValid: false,
+    isValid: true,
     value: "",
     validator:
       Js.Re.fromString(
@@ -129,6 +119,7 @@ let emptyState = {
     value: "",
     validator: Js.Re.fromString(".+"),
   },
+  validated: false,
 };
 
 let make = _children => {
@@ -136,6 +127,7 @@ let make = _children => {
   didMount: _self => {
     initMap();
     ReasonReact.NoUpdate;
+    ();
   },
   initialState: () => emptyState,
   reducer: action =>
@@ -151,6 +143,7 @@ let make = _children => {
               value: text,
               isValid: Js.Re.test(state.name.value, state.name.validator),
             },
+            validated: true,
           });
         }
       )
@@ -170,6 +163,7 @@ let make = _children => {
               ...state.text,
               isValid: Js.Re.test(state.text.value, state.text.validator),
             },
+            validated: true,
           })
       )
     | ChangeEmail(text) => (
@@ -181,6 +175,7 @@ let make = _children => {
               value: text,
               isValid: Js.Re.test(state.email.value, state.email.validator),
             },
+            validated: true,
           })
       )
     | ChangeText(text) => (
@@ -192,6 +187,7 @@ let make = _children => {
               value: text,
               isValid: Js.Re.test(state.text.value, state.text.validator),
             },
+            validated: true,
           })
       )
     | KeyDown(13) => (state => submitContactForm(state))
@@ -206,16 +202,12 @@ let make = _children => {
     },
   render: ({state, handle, send}) =>
     <div className="section">
-      <div> <h2> (ReasonReact.stringToElement("Contact us")) </h2> </div>
-      <p> (ReasonReact.stringToElement("6 beers brewing company")) </p>
+      <div> <h2> (ReasonReact.string("Contact us")) </h2> </div>
+      <p> (ReasonReact.string("6 beers brewing company")) </p>
       <p>
-        (
-          ReasonReact.stringToElement(
-            "Margaritenweg 23, 2384 Breitenfurt Austria",
-          )
-        )
+        (ReasonReact.string("Margaritenweg 23, 2384 Breitenfurt Austria"))
       </p>
-      <p> (ReasonReact.stringToElement("Tel.: +43 677 624 168 66")) </p>
+      <p> (ReasonReact.string("Tel.: +43 677 624 168 66")) </p>
       <form className="needs-validation">
         <fieldset
           disabled=(
@@ -227,7 +219,9 @@ let make = _children => {
           (
             switch (state.status) {
             | Idle =>
-              <div>
+              <div className="tile left-align">
+                <h5 className="margin-top-m"> (ReasonReact.string("Send us a note:")) </h5>
+                <div className="margin-top-m" />
                 <div className="row">
                   <div className="col-md-6">
                     <div
@@ -313,13 +307,14 @@ let make = _children => {
                   <div className="col-md-12">
                     <button
                       disabled=(
-                        ! state.name.isValid
+                        ! state.validated
+                        || ! state.name.isValid
                         || ! state.email.isValid
                         || ! state.text.isValid
                       )
                       onClick=(_event => send(Submit))
                       className="btn btn-success btn-large btn-block">
-                      (ReasonReact.stringToElement("Submit"))
+                      (ReasonReact.string("Submit"))
                     </button>
                   </div>
                 </div>
@@ -391,7 +386,7 @@ let make = _children => {
                     <button
                       onClick=(_event => send(Submit))
                       className="btn btn-success btn-large btn-block">
-                      (ReasonReact.stringToElement("Submit"))
+                      (ReasonReact.string("Submit"))
                     </button>
                   </div>
                 </div>
@@ -404,8 +399,8 @@ let make = _children => {
                 <div className="col-md-10">
                   <p>
                     (
-                      ReasonReact.stringToElement(
-                        "Your question was successfully submitted. You will receive a response in the coming days!",
+                      ReasonReact.string(
+                        "Your question was successfully submitted. We will get back to you per Email as soon as we can!",
                       )
                     )
                   </p>
@@ -414,7 +409,7 @@ let make = _children => {
                   <button
                     className="btn btn-info btn-large btn-block margin-xl"
                     onClick=(_event => send(Reset))>
-                    (ReasonReact.stringToElement("Send another question"))
+                    (ReasonReact.string("Send another question"))
                   </button>
                 </div>
               </div>
@@ -423,7 +418,7 @@ let make = _children => {
                 <span className="fui-cross-circle" />
                 <span>
                   (
-                    ReasonReact.stringToElement(
+                    ReasonReact.string(
                       "The submission failed! Please try again.",
                     )
                   )
@@ -431,6 +426,8 @@ let make = _children => {
               </div>
             }
           )
+          <div className="row margin-top-l" />
+          <div className="row margin-top-m" />
           <div className="row">
             <div
               id="map-container"
