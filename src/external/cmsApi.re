@@ -16,6 +16,7 @@ type cmsBeerDetailSubheadline = {
   maltinessRating: int,
   hoppinessRating: int,
   bitternessRating: int,
+  foodPairing: string,
 };
 
 type cmsImg = {
@@ -141,7 +142,7 @@ let mapJsonValuesToState = (cmsContent: cmsNewsList) : apiItems => {
              Js.Re.exec(
                value,
                Js.Re.fromString(
-                 "(.+)\\/(.+)\\/(.+)\\/(.+)\\/(.+)\\/(.+)\\/(.+)",
+                 "(.+)\\/(.+)\\/(.+)\\/(.+)\\/(.+)\\/(.+)\\/(.+)\\/(.+)",
                ),
              );
            switch (parsedMatch) {
@@ -153,6 +154,7 @@ let mapJsonValuesToState = (cmsContent: cmsNewsList) : apiItems => {
                maltinessRating: 0,
                hoppinessRating: 0,
                bitternessRating: 0,
+               foodPairing: "",
              }
            | Some(match) => {
                priceSmall: float_of_string(Js.Re.matches(match)[1]),
@@ -162,12 +164,15 @@ let mapJsonValuesToState = (cmsContent: cmsNewsList) : apiItems => {
                maltinessRating: int_of_string(Js.Re.matches(match)[5]),
                hoppinessRating: int_of_string(Js.Re.matches(match)[6]),
                bitternessRating: int_of_string(Js.Re.matches(match)[7]),
+               foodPairing: Js.Re.matches(match)[8],
              }
            };
          };
          let beerSubheadline = parseBeerSubheadline(beerInfo.subheadline);
          let beerDetailSubheadline =
            parseBeerDetailSubheadline(beerDetail.subheadline);
+         
+
          let result: Beer.beer = {
            id: beerSubheadline.id,
            code: beercode,
@@ -175,6 +180,7 @@ let mapJsonValuesToState = (cmsContent: cmsNewsList) : apiItems => {
            sort: beerSubheadline.sort,
            description: beerInfo.teaser,
            detail: beerDetail.teaser,
+           foodPairing: beerDetailSubheadline.foodPairing,
            priceSmall: beerDetailSubheadline.priceSmall,
            priceLarge: beerDetailSubheadline.priceLarge,
            quantitySmall: beerDetailSubheadline.quantitySmall,

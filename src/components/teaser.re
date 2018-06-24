@@ -12,7 +12,7 @@ let newsElements = (news: list(news)) =>
   news
   |> List.map((n: news) =>
        <div style=(ReactDOMRe.Style.make(~marginBottom="10px", ())) key=n.id>
-         <h5> (ReasonReact.stringToElement(n.title)) </h5>
+         <h5> (ReasonReact.string(n.title)) </h5>
          <div style=(ReactDOMRe.Style.make(~margin="5px", ()))>
            (
              switch (n.link) {
@@ -46,6 +46,6 @@ let make = (~news, _children) => {
   ...component,
   render: _self =>
     <Slider slidesToShow=3 dots=true autoplaySpeed=5000>
-      (ReasonReact.arrayToElement(newsElements(news)))
+      (ReasonReact.array(newsElements(news)))
     </Slider>,
 };

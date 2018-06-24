@@ -146,7 +146,7 @@ let make = _children => {
     },
   didMount: self => {
     self.send(LoadApi);
-    ReasonReact.NoUpdate;
+    ();
   },
   subscriptions: self => [
     Sub(
@@ -194,7 +194,7 @@ let make = _children => {
                 <HorizontalSeparator />
                 <div className="section" id="selection">
                   <h2 className="center-block">
-                    (ReasonReact.stringToElement("News"))
+                    (ReasonReact.string("News"))
                   </h2>
                   <div>
                     (
@@ -223,8 +223,8 @@ let make = _children => {
                 switch (beerCode) {
                 | None =>
                   <div>
-                    <h2> (ReasonReact.stringToElement("Beer")) </h2>
-                    (ReasonReact.arrayToElement(Array.of_list(beers)))
+                    <h2> (ReasonReact.string("Beer")) </h2>
+                    (ReasonReact.array(Array.of_list(beers)))
                   </div>
                 | Some(code) =>
                   switch (

@@ -127,6 +127,7 @@ let make = _children => {
   didMount: _self => {
     initMap();
     ReasonReact.NoUpdate;
+    ();
   },
   initialState: () => emptyState,
   reducer: action =>
@@ -201,16 +202,12 @@ let make = _children => {
     },
   render: ({state, handle, send}) =>
     <div className="section">
-      <div> <h2> (ReasonReact.stringToElement("Contact us")) </h2> </div>
-      <p> (ReasonReact.stringToElement("6 beers brewing company")) </p>
+      <div> <h2> (ReasonReact.string("Contact us")) </h2> </div>
+      <p> (ReasonReact.string("6 beers brewing company")) </p>
       <p>
-        (
-          ReasonReact.stringToElement(
-            "Margaritenweg 23, 2384 Breitenfurt Austria",
-          )
-        )
+        (ReasonReact.string("Margaritenweg 23, 2384 Breitenfurt Austria"))
       </p>
-      <p> (ReasonReact.stringToElement("Tel.: +43 677 624 168 66")) </p>
+      <p> (ReasonReact.string("Tel.: +43 677 624 168 66")) </p>
       <form className="needs-validation">
         <fieldset
           disabled=(
@@ -222,7 +219,8 @@ let make = _children => {
           (
             switch (state.status) {
             | Idle =>
-              <div className="tile">
+              <div className="tile left-align">
+                <h5 className="margin-top-m"> (ReasonReact.string("Send us a note:")) </h5>
                 <div className="margin-top-m" />
                 <div className="row">
                   <div className="col-md-6">
@@ -316,7 +314,7 @@ let make = _children => {
                       )
                       onClick=(_event => send(Submit))
                       className="btn btn-success btn-large btn-block">
-                      (ReasonReact.stringToElement("Submit"))
+                      (ReasonReact.string("Submit"))
                     </button>
                   </div>
                 </div>
@@ -388,7 +386,7 @@ let make = _children => {
                     <button
                       onClick=(_event => send(Submit))
                       className="btn btn-success btn-large btn-block">
-                      (ReasonReact.stringToElement("Submit"))
+                      (ReasonReact.string("Submit"))
                     </button>
                   </div>
                 </div>
@@ -401,8 +399,8 @@ let make = _children => {
                 <div className="col-md-10">
                   <p>
                     (
-                      ReasonReact.stringToElement(
-                        "Your question was successfully submitted. You will receive a response in the coming days!",
+                      ReasonReact.string(
+                        "Your question was successfully submitted. We will get back to you per Email as soon as we can!",
                       )
                     )
                   </p>
@@ -411,7 +409,7 @@ let make = _children => {
                   <button
                     className="btn btn-info btn-large btn-block margin-xl"
                     onClick=(_event => send(Reset))>
-                    (ReasonReact.stringToElement("Send another question"))
+                    (ReasonReact.string("Send another question"))
                   </button>
                 </div>
               </div>
@@ -420,7 +418,7 @@ let make = _children => {
                 <span className="fui-cross-circle" />
                 <span>
                   (
-                    ReasonReact.stringToElement(
+                    ReasonReact.string(
                       "The submission failed! Please try again.",
                     )
                   )

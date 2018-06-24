@@ -3756,6 +3756,14 @@ body.noscroll {
   margin-top: 12px;
 }
 
+.margin-top-s {
+  margin-top: 9.1px;
+}
+
+.margin-bottom-s {
+  margin-bottom: 10px;
+}
+
 .padding-m {
   padding: 7px;
 }
@@ -3770,4 +3778,8 @@ body.noscroll {
 
 .vertical-middle {
   vertical-align: middle;
+}
+
+.left-align {
+  text-align: left;
 }

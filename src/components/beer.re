@@ -10,6 +10,7 @@ type beer = {
   sort: string,
   description: string,
   detail: string,
+  foodPairing: string,
   priceSmall: float,
   priceLarge: float,
   quantitySmall: int,
@@ -42,7 +43,7 @@ let make = (~beer, ~onOrdered, _children) => {
           className="tile-hot-ribbon"
         />
         <h3 style=(ReactDOMRe.Style.make(~marginBottom="5px", ()))>
-          (ReasonReact.stringToElement(beer.name))
+          (ReasonReact.string(beer.name))
         </h3>
         <Image
           src=beer.bottle.thumbnail
@@ -55,12 +56,11 @@ let make = (~beer, ~onOrdered, _children) => {
       <div className="row tile">
         <div className="col-12 margin-xl">
           <h2 className="tile-title margin-m">
-            (ReasonReact.stringToElement(beer.name))
+            (ReasonReact.string(beer.name))
           </h2>
-          <h3 className="tile-title">
-            (ReasonReact.stringToElement(beer.sort))
-          </h3>
+          <h3 className="tile-title"> (ReasonReact.string(beer.sort)) </h3>
         </div>
+        <HorizontalSeparator />
         <div className="col-md-4">
           <Image
             src=beer.bottle.fullsize
@@ -72,31 +72,30 @@ let make = (~beer, ~onOrdered, _children) => {
           <Ratings ratings=beer.ratings onClick=onOrdered />
         </div>
         <div className="col-md-4">
-          <h5> (ReasonReact.stringToElement("Description")) </h5>
-          <div dangerouslySetInnerHTML={"__html": beer.description} />
+          <h5 > (ReasonReact.string("Description")) </h5>
+          <div className="margin-top-s" dangerouslySetInnerHTML={"__html": beer.description} />
         </div>
         <div className="col-md-5">
-          <h5> (ReasonReact.stringToElement("Details")) </h5>
-          <div dangerouslySetInnerHTML={"__html": beer.detail} />
+          <h5> (ReasonReact.string("Details")) </h5>
+          <div className="margin-top-s" dangerouslySetInnerHTML={"__html": beer.detail} />
         </div>
         <div className="col-md-3">
-          <h5> (ReasonReact.stringToElement("Price")) </h5>
-          <h2>
-            (ReasonReact.stringToElement(string_of_float(beer.priceSmall)))
-          </h2>
+          <h5> (ReasonReact.string("Price ")) (ReasonReact.string({js|€uro|js})) (ReasonReact.string("")) </h5>
+          <h2> (ReasonReact.string(Js.Float.toFixedWithPrecision(beer.priceSmall, ~digits=2)))
+          (ReasonReact.string(",- ")) </h2>
           <p>
-            (
-              ReasonReact.stringToElement(
-                "(incl. VAT and Beertax) per 330ml bottle",
-              )
-            )
+            (ReasonReact.string("(incl. VAT and Beertax) per 330ml bottle"))
           </p>
+        </div>
+        <div className="col-md-8 margin-top-m">
+          <h5> (ReasonReact.string("Food Pairing")) </h5>
+          <p className="margin-top-s"> (ReasonReact.string(beer.foodPairing)) </p>
         </div>
         <div className="col-md-12 margin-l">
           <button
             onClick=(clicked(beer.name))
             className="btn btn-success btn-large btn-block">
-            (ReasonReact.stringToElement("Order"))
+            (ReasonReact.string("Order"))
           </button>
         </div>
       </div>

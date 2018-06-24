@@ -13,6 +13,7 @@ let beerMock: Beer.beer = {
   sort: "Pale Ale",
   description: "This is A TEST",
   detail: "Lorem Ipsum",
+  foodPairing: "Beavertown Extravaganza",
   priceSmall: 3.0,
   priceLarge: 4.5,
   quantitySmall: 100,
