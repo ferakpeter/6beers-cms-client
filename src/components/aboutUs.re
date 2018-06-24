@@ -11,7 +11,7 @@ let make = _children => {
           src="assets/img/brewery.jpg"
         />
       </div>
-      <div className="row"> <br /> </div>
+      <div className="row margin-top-l" />
       <div className="row">
         <div className="col-md-12">
           <div className="card">

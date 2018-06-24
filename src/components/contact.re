@@ -222,7 +222,8 @@ let make = _children => {
           (
             switch (state.status) {
             | Idle =>
-              <div>
+              <div className="tile">
+                <div className="margin-top-m" />
                 <div className="row">
                   <div className="col-md-6">
                     <div
@@ -427,6 +428,8 @@ let make = _children => {
               </div>
             }
           )
+          <div className="row margin-top-l" />
+          <div className="row margin-top-m" />
           <div className="row">
             <div
               id="map-container"

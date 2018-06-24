@@ -1716,7 +1716,7 @@ label,
 }
 
 .form-control {
-  margin-bottom: 1.875em;
+  margin-bottom: 0px;
 }
 
 @-webkit-keyframes zoomOut {
@@ -3750,6 +3750,10 @@ body.noscroll {
 
 .margin-top-l {
   margin-top: 25px;
+}
+
+.margin-top-m {
+  margin-top: 12px;
 }
 
 .padding-m {
