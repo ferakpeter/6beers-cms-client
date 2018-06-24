@@ -68,24 +68,30 @@ let make = (~beer, ~onOrdered, _children) => {
             onClick=onOrdered
           />
         </div>
+        
         <div className="col-md-4 padding-l">
           <Ratings ratings=beer.ratings onClick=onOrdered />
         </div>
         <div className="col-md-4">
-          <h5 > (ReasonReact.string("Description")) </h5>
-          <div className="margin-top-s" dangerouslySetInnerHTML={"__html": beer.description} />
-        </div>
-        <div className="col-md-5">
-          <h5> (ReasonReact.string("Details")) </h5>
-          <div className="margin-top-s" dangerouslySetInnerHTML={"__html": beer.detail} />
-        </div>
-        <div className="col-md-3">
-          <h5> (ReasonReact.string("Price ")) (ReasonReact.string({js|€uro|js})) (ReasonReact.string("")) </h5>
+          <h5> (ReasonReact.string("Price"))</h5>
           <h2> (ReasonReact.string(Js.Float.toFixedWithPrecision(beer.priceSmall, ~digits=2)))
           (ReasonReact.string(",- ")) </h2>
           <p>
-            (ReasonReact.string("(incl. VAT and Beertax) per 330ml bottle"))
+            (ReasonReact.string({js|(incl. VAT and Beertax) €uro per 330ml bottle|js}))
           </p>
+        </div>
+
+        <div className="col-md-8 margin-top-m" />
+
+        <div className="col-md-4">
+          <h5 > (ReasonReact.string("Description")) </h5>
+          <div className="margin-top-s left-align" dangerouslySetInnerHTML={"__html": beer.description} />
+        </div>
+        
+        
+        <div className="col-md-4">
+          <h5> (ReasonReact.string("Details")) </h5>
+          <div className="margin-top-s left-align" dangerouslySetInnerHTML={"__html": beer.detail} />
         </div>
         <div className="col-md-8 margin-top-m">
           <h5> (ReasonReact.string("Food Pairing")) </h5>

@@ -48,8 +48,8 @@ let component = ReasonReact.reducerComponent("Contact");
 let submitContactForm = state => {
   let req =
     EmailApi.createContactRequest(
-      state.name.value,
       state.email.value,
+      state.name.value,
       state.text.value,
     );
   ReasonReact.UpdateWithSideEffects(
